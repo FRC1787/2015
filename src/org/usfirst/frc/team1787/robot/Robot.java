@@ -8,12 +8,12 @@ package org.usfirst.frc.team1787.robot;
 
 import edu.wpi.first.wpilibj.*;
 
-public class RobotMain extends IterativeRobot 
+public class Robot extends IterativeRobot 
 {
     
 	DriveController dc = new DriveController(11, 12, 14, 16, 1);
 	
-	public RobotMain()
+	public Robot()
     {
     	
     }
