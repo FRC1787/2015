@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1787.robot;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.*;
 
 /**
  * @author jeremystark
@@ -9,38 +8,72 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class DriveController 
 {
-
-    public static void driveControls() 
+	//Jaguar Motor Controllers
+    private CANJaguar leftMotor1;
+    private CANJaguar leftMotor2;
+    private CANJaguar rightMotor1;
+    private CANJaguar rightMotor2;
+    
+    private Joystick xboxController;
+    
+    private RobotDrive robotDrive;
+    
+    private double driveSpeed = 0.5;
+	
+    //requires the port numbers for all motors and joystick number.
+    public DriveController(int leftPort1, int leftPort2, int rightPort1, int rightPort2, int xboxStickNum)
     {
-        double lastTime, timeDelta = 0.0;
-        double time = Timer.getFPGATimestamp();
-            
-        lastTime = time;
-        time = Timer.getFPGATimestamp();
-        timeDelta = time - lastTime;
-            
-        Variables.robotDrive.arcadeDrive
+    	//left motors configured
+    	leftMotor1 = new CANJaguar(leftPort1);
+    	leftMotor2 = new CANJaguar(leftPort2);
+    	
+    	//right motors configured
+    	rightMotor1 = new CANJaguar(rightPort1);
+    	rightMotor2 = new CANJaguar(rightPort2);
+    	
+    	//Xbox Controller configured
+    	xboxController = new Joystick(xboxStickNum);
+    	
+    	robotDriveInit();
+    }
+    
+    public void robotDriveInit()
+    {
+    	//Set up the motors in the robotDrive();
+        robotDrive = new RobotDrive
         (
-            Variables.xboxController.getY() * Variables.driveSpeed, 
-            -Variables.xboxController.getX() * Variables.driveSpeed, 
+            leftMotor1, leftMotor2, 
+            rightMotor1, rightMotor2
+        );
+        
+        driveControls(driveSpeed);
+    }
+    
+    public void driveControls(double speed) 
+    {   
+    	speed = driveSpeed;
+    	
+        robotDrive.arcadeDrive
+        (
+            xboxController.getY() * speed, 
+            -xboxController.getX() * speed, 
             true
         );
     }
    
-   
     public static void shiftingControls() 
     {
         //Shifting controls
-        if (Variables.xboxController.getRawButton(5))
+        /*if (xboxController.getRawButton(5))
         {
-            Variables.gearShifter.set(DoubleSolenoid.Value.kForward);
-            Variables.shifterPosition = false;
+            gearShifter.set(DoubleSolenoid.Value.kForward);
+            shifterPosition = false;
         }
 
-        else if (Variables.xboxController.getRawButton(6))
+        else if (xboxController.getRawButton(6))
         {
-            Variables.gearShifter.set(DoubleSolenoid.Value.kReverse);
-            Variables.shifterPosition = true;
-        }
+            gearShifter.set(DoubleSolenoid.Value.kReverse);
+            shifterPosition = true;
+        }*/
     }  
 }
