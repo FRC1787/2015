@@ -14,11 +14,11 @@ public class DriveController
     private CANJaguar rightMotor1;
     private CANJaguar rightMotor2;
     
-    private Joystick xboxController;
+    public static Joystick xboxController;
     
-    private RobotDrive robotDrive;
+    public static RobotDrive robotDrive;
     
-    private double driveSpeed = 0.5;
+    public static double driveSpeed = 0.5;
 	
     //requires the port numbers for all motors and joystick number.
     public DriveController(int leftPort1, int leftPort2, int rightPort1, int rightPort2, int xboxStickNum)
@@ -34,7 +34,7 @@ public class DriveController
     	//Xbox Controller configured
     	xboxController = new Joystick(xboxStickNum);
     	
-    	robotDriveInit();
+    	//robotDriveInit();
     }
     
     public void robotDriveInit()

@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj.*;
 public class RobotMain extends IterativeRobot 
 {
     
-    public RobotMain()
+	DriveController dc = new DriveController(11, 12, 14, 16, 1);
+	
+	public RobotMain()
     {
     	
     }
@@ -19,28 +21,27 @@ public class RobotMain extends IterativeRobot
     public void robotInit()
     {
         System.out.println("Robot Init.");
-        
-        
     }
     
     //Called once when the robot enters autonomous mode
-    public void autonomousInit() 
+    public void autonomousPeriodic() 
     {
         System.out.println("Autonomous Init.");
         
     }
-
-    //Called when the robot enters teleop mode
-    public void teleopInit() 
+    
+    //Called 50x a second when the robot enters teleop mode
+    public void teleopPeriodic()
     {
-        System.out.println("Teleop Init");
+    	dc.robotDriveInit();
     }
     
     
     
     //Called when the robot enters test mode
-    public void testInit() 
+    public void testPeriodic() 
     {
         System.out.println("Test Init.");
+        
     }
 }
