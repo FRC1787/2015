@@ -34,9 +34,7 @@ public class DriveController
     	//Xbox Controller configured
     	xboxController = new Joystick(xboxStickNum);
     	
-        robotDrive = new RobotDrive(leftMotor1, rightMotor1, rightMotor2, leftMotor2);
-    	
-    	System.out.println("Constructor called");
+        robotDrive = new RobotDrive(leftMotor1, leftMotor2, rightMotor1, rightMotor2);
     }
     
     public void driveControls() 
