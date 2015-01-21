@@ -41,7 +41,12 @@ public class DriveController
     
     public void driveControls() 
     {   
-        robotDrive.arcadeDrive(xboxController);
+    	robotDrive.arcadeDrive
+        (
+            xboxController.getY() * driveSpeed, 
+            -xboxController.getX() * driveSpeed, 
+            true
+        );
         Timer.delay(0.01);
     }
     

@@ -39,7 +39,10 @@ public class Robot extends IterativeRobot
     //Called 50x a second when the robot enters teleop mode
     public void teleopPeriodic()
     {
-    	dc.driveControls();
+    	while(isOperatorControl() && isEnabled())
+    	{
+    		dc.driveControls();
+    	}
     }
     
     
