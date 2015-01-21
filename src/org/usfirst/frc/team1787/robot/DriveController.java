@@ -34,7 +34,7 @@ public class DriveController
     	//Xbox Controller configured
     	xboxController = new Joystick(xboxStickNum);
     	
-        robotDrive = new RobotDrive(leftMotor1, leftMotor2, rightMotor1, rightMotor2);
+        robotDrive = new RobotDrive(leftMotor2, leftMotor1, rightMotor2, rightMotor1);
     }
     
     public void driveControls() 
