@@ -34,31 +34,21 @@ public class DriveController
     	//Xbox Controller configured
     	xboxController = new Joystick(xboxStickNum);
     	
-    	//robotDriveInit();
-    }
-    
-    public void robotDriveInit()
-    {
-    	//Set up the motors in the robotDrive();
-        robotDrive = new RobotDrive
-        (
-            leftMotor1, leftMotor2, 
-            rightMotor1, rightMotor2
-        );
-        
-        driveControls(driveSpeed);
-    }
-    
-    public void driveControls(double speed) 
-    {   
-    	speed = driveSpeed;
+        robotDrive = new RobotDrive(leftMotor1, rightMotor1, rightMotor2, leftMotor2);
     	
-        robotDrive.arcadeDrive
-        (
-            xboxController.getY() * speed, 
-            -xboxController.getX() * speed, 
-            true
-        );
+    	System.out.println("Constructor called");
+    }
+    
+    public void driveControls() 
+    {   
+        robotDrive.arcadeDrive(xboxController);
+        Timer.delay(0.01);
+    }
+    
+    public void tryDrive()
+    {
+    	leftMotor1.set(1);
+    	leftMotor2.set(1);
     }
    
     public static void shiftingControls() 
