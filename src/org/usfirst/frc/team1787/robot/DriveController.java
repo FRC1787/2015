@@ -36,14 +36,25 @@ public class DriveController
     	//Xbox Controller configured
     	xboxController = new Joystick(xboxStickNum);
     	
+    	/*
+    	 * Tested each set of Jaguars individually, determined that both sets work.
+    	 * Switched order in constructor (back motors passed in as front motors, and vice versa)
+    	 * and all four work correctly
+    	 * 
+    	 * Tried once more with original configuration, and it works properly. Must be electrical
+    	 * error.
+    	 */
+    	
         robotDrive = new RobotDrive(leftMotor2, leftMotor1, rightMotor2, rightMotor1);
+    	//robotDrive = new RobotDrive(leftMotor2, rightMotor2);
     }
     
     public void driveControls() 
     {   
-    	Utils.print("X: " + xboxController.getX() + " Y: " + xboxController.getY());
+    	// uncomment following line to print joystick input to console
+    	//Utils.print("X: " + xboxController.getX() + " Y: " + xboxController.getY());
     	
-    	robotDrive.arcadeDrive(xboxController.getY() * DRIVE_SPEED, -xboxController.getX() * DRIVE_SPEED, true);
+    	robotDrive.arcadeDrive(-xboxController.getY() * DRIVE_SPEED, -xboxController.getX() * DRIVE_SPEED, true);
     	
     	/*if(xboxController.getRawButton(1))
     	{
