@@ -14,12 +14,14 @@ public class DriveController
     private CANJaguar rightMotor1;
     private CANJaguar rightMotor2;
     
-    public static Joystick xboxController;
+    private Joystick xboxController;
     
-    public static RobotDrive robotDrive;
+    private RobotDrive robotDrive;
     
-    public static double driveSpeed = 0.5;
-	
+    private boolean running = true;
+    
+    public static double DRIVE_SPEED = 0.5;
+    
     //requires the port numbers for all motors and joystick number.
     public DriveController(int leftPort1, int leftPort2, int rightPort1, int rightPort2, int xboxStickNum)
     {
@@ -39,22 +41,40 @@ public class DriveController
     
     public void driveControls() 
     {   
-    	robotDrive.arcadeDrive
-        (
-            xboxController.getY() * driveSpeed, 
-            -xboxController.getX() * driveSpeed, 
-            true
-        );
+    	Utils.print("X: " + xboxController.getX() + " Y: " + xboxController.getY());
+    	
+    	robotDrive.arcadeDrive(xboxController.getY() * DRIVE_SPEED, -xboxController.getX() * DRIVE_SPEED, true);
+    	
+    	/*if(xboxController.getRawButton(1))
+    	{
+    		leftMotor1.set(1);
+    	}
+    	else if (!xboxController.getRawButton(1))
+    	{
+    		leftMotor1.set(0);
+    	}
+    	
+    	if(xboxController.getRawButton(2))
+    	{
+    		rightMotor1.set(1);
+    	}
+    	else if (!xboxController.getRawButton(2))
+    	{
+    		rightMotor1.set(0);
+    	}*/
+    	
         Timer.delay(0.01);
     }
     
     public void tryDrive()
-    {
-    	leftMotor1.set(1);
-    	leftMotor2.set(1);
+    {	
+    	while(running)
+    	{
+    		leftMotor1.set(1);
+    	}
     }
    
-    public static void shiftingControls() 
+    public void shiftingControls() 
     {
         //Shifting controls
         /*if (xboxController.getRawButton(5))
