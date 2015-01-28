@@ -9,10 +9,12 @@ import edu.wpi.first.wpilibj.*;
 public class DriveController 
 {
 	//Jaguar Motor Controllers
-    private CANJaguar leftMotor1;
-    private CANJaguar leftMotor2;
-    private CANJaguar rightMotor1;
-    private CANJaguar rightMotor2;
+    private Talon leftMotor1;
+    private Talon leftMotor2;
+    private Talon rightMotor1;
+    private Talon rightMotor2;
+    
+    private Talon pickUp;
     
     private Joystick xboxController;
     
@@ -24,16 +26,21 @@ public class DriveController
     
     public static final double DRIVE_SPEED = 0.5;
     
+    private double pickupSpeed = 0;
+    
     //requires the port numbers for all motors and joystick number.
-    public DriveController(int leftPort1, int leftPort2, int rightPort1, int rightPort2, int xboxStickNum)
+    public DriveController(int leftPort1, int leftPort2, int rightPort1, int rightPort2, int pickupPort, int xboxStickNum)
     {
     	//left motors configured
-    	leftMotor1 = new CANJaguar(leftPort1);
-    	leftMotor2 = new CANJaguar(leftPort2);
+    	leftMotor1 = new Talon(leftPort1);
+    	leftMotor2 = new Talon(leftPort2);
     	
     	//right motors configured
-    	rightMotor1 = new CANJaguar(rightPort1);
-    	rightMotor2 = new CANJaguar(rightPort2);
+    	rightMotor1 = new Talon(rightPort1);
+    	rightMotor2 = new Talon(rightPort2);
+    	
+    	//pickup motor configured
+    	pickUp = new Talon(pickupPort);
     	
     	//Xbox Controller configured
     	xboxController = new Joystick(xboxStickNum);
@@ -49,6 +56,11 @@ public class DriveController
     	
         robotDrive = new RobotDrive(leftMotor2, leftMotor1, rightMotor2, rightMotor1);
     	//robotDrive = new RobotDrive(leftMotor2, rightMotor2);
+    }
+    
+    public Joystick getXboxController()
+    {
+    	return xboxController;
     }
     
     public void driveControls() 
@@ -72,26 +84,20 @@ public class DriveController
     	
     	robotDrive.arcadeDrive(moveValue, rotateValue, true);
     	
-    	
-    	/*if(xboxController.getRawButton(1))
-    	{
-    		leftMotor1.set(1);
-    	}
-    	else if (!xboxController.getRawButton(1))
-    	{
-    		leftMotor1.set(0);
-    	}
-    	
-    	if(xboxController.getRawButton(2))
-    	{
-    		rightMotor1.set(1);
-    	}
-    	else if (!xboxController.getRawButton(2))
-    	{
-    		rightMotor1.set(0);
-    	}*/
-    	
         Timer.delay(0.01);
+    }
+    
+    public void pickupFunction()
+    {
+    	double x = 0;
+    	
+    	while (xboxController.getRawButton(1))
+    	{
+    		pickupSpeed = (Math.pow(1.4, x) - 1) <= 1 ? (Math.pow(1.4, x) - 1) : 1;
+    		x += 0.1;
+    		
+    		pickUp.set(pickupSpeed);
+    	}
     }
     
     public void tryDrive()
