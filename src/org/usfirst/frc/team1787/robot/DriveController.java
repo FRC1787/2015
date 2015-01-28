@@ -18,9 +18,11 @@ public class DriveController
     
     private RobotDrive robotDrive;
     
+    private double moveValue, rotateValue;
+    
     private boolean running = true;
     
-    public static double DRIVE_SPEED = 0.5;
+    public static final double DRIVE_SPEED = 0.5;
     
     //requires the port numbers for all motors and joystick number.
     public DriveController(int leftPort1, int leftPort2, int rightPort1, int rightPort2, int xboxStickNum)
@@ -54,7 +56,22 @@ public class DriveController
     	// uncomment following line to print joystick input to console
     	//Utils.print("X: " + xboxController.getX() + " Y: " + xboxController.getY());
     	
-    	robotDrive.arcadeDrive(-xboxController.getY() * DRIVE_SPEED, -xboxController.getX() * DRIVE_SPEED, true);
+    	double oldMoveValue = moveValue;
+    	double oldRotateValue = rotateValue;
+    	
+    	final double MOTOR_INCREMENT = 0.003333;
+    	final double MOTOR_MAX = 0.5;
+    	
+    	moveValue = -xboxController.getY() * DRIVE_SPEED;
+    	rotateValue = -xboxController.getX() * DRIVE_SPEED;
+    	
+    	if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
+    	{	
+    		moveValue = oldMoveValue + MOTOR_INCREMENT;
+    	}
+    	
+    	robotDrive.arcadeDrive(moveValue, rotateValue, true);
+    	
     	
     	/*if(xboxController.getRawButton(1))
     	{
