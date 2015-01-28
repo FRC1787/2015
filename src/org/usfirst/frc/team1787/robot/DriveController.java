@@ -3,7 +3,7 @@ package org.usfirst.frc.team1787.robot;
 import edu.wpi.first.wpilibj.*;
 
 /**
- * @author jeremystark
+ * @author jeremystark, ebencarek
  **/
 
 public class DriveController 

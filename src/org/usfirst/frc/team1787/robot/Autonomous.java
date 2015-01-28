@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1787.robot;
 
 /**
- * @author jeremystark
+ * @author jeremystark, ebencarek
  **/
 
 public class Autonomous 
