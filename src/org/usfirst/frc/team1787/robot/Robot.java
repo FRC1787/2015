@@ -10,12 +10,18 @@ import edu.wpi.first.wpilibj.*;
 
 public class Robot extends IterativeRobot 
 {
-    
-	DriveController dc = new DriveController(11, 12, 14, 16, 17, 0);
+    Joystick xboxController = new Joystick(0);
 	
-	Pneumatics pn = new Pneumatics();
+	DriveController driveController = new DriveController(11, 12, 14, 16, this.getXboxController());
+	PickupController pickupController = new PickupController(17, 0, 1, this.getXboxController());
+	Pneumatics pneumatics = new Pneumatics();
 	
 	boolean pickupActive = false;
+	
+	public Joystick getXboxController()
+	{
+		return this.xboxController;
+	}
 	
 	public Robot()
     {
@@ -30,36 +36,24 @@ public class Robot extends IterativeRobot
     //Called once when the robot enters autonomous mode
     public void autonomousPeriodic() 
     {
-    	dc.tryDrive();
+    	driveController.tryDrive();
     }
     
     //Called 50x a second when the robot enters teleop mode
     public void teleopPeriodic()
     {
-    	dc.driveControls();
-    	
-    	if (dc.getXboxController().getRawButton(1))
-    	{
-    		if (!pickupActive)
-    		{
-    			dc.pickupFunction();
-    			pickupActive = true;
-    		}
-    	}
-    	else
-    	{
-    		pickupActive = false;
-    	}
+    	driveController.driveControls();
+    	pickupController.pickupPeriodic();
     }
     
     //Called when the robot enters test mode
     public void testInit() 
     {
-    	pn.startCompressor();
+    	pneumatics.startCompressor();
     }
     
     public void testPeriodic()
     {
-    	pn.solenoidTest();
+    	pneumatics.solenoidTest();
     }
 }

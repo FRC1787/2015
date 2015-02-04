@@ -9,12 +9,7 @@ import edu.wpi.first.wpilibj.*;
 public class DriveController 
 {
 	//Jaguar Motor Controllers
-    private Talon leftMotor1;
-    private Talon leftMotor2;
-    private Talon rightMotor1;
-    private Talon rightMotor2;
-    
-    private Talon pickUp;
+    private Talon leftMotor1, leftMotor2, rightMotor1, rightMotor2;
     
     private Joystick xboxController;
     
@@ -26,10 +21,8 @@ public class DriveController
     
     public static final double DRIVE_SPEED = 0.5;
     
-    private double pickupSpeed = 0;
-    
     //requires the port numbers for all motors and joystick number.
-    public DriveController(int leftPort1, int leftPort2, int rightPort1, int rightPort2, int pickupPort, int xboxStickNum)
+    public DriveController(int leftPort1, int leftPort2, int rightPort1, int rightPort2, Joystick xboxController)
     {
     	//left motors configured
     	leftMotor1 = new Talon(leftPort1);
@@ -39,11 +32,8 @@ public class DriveController
     	rightMotor1 = new Talon(rightPort1);
     	rightMotor2 = new Talon(rightPort2);
     	
-    	//pickup motor configured
-    	pickUp = new Talon(pickupPort);
-    	
     	//Xbox Controller configured
-    	xboxController = new Joystick(xboxStickNum);
+    	this.xboxController = xboxController;
     	
     	/*
     	 * Tested each set of Jaguars individually, determined that both sets work.
@@ -58,18 +48,13 @@ public class DriveController
     	//robotDrive = new RobotDrive(leftMotor2, rightMotor2);
     }
     
-    public Joystick getXboxController()
-    {
-    	return xboxController;
-    }
-    
     public void driveControls() 
     {   
     	// uncomment following line to print joystick input to console
     	//Utils.print("X: " + xboxController.getX() + " Y: " + xboxController.getY());
     	
     	double oldMoveValue = moveValue;
-    	double oldRotateValue = rotateValue;
+    	//double oldRotateValue = rotateValue;
     	
     	final double MOTOR_INCREMENT = 0.003333;
     	final double MOTOR_MAX = 0.5;
@@ -85,19 +70,6 @@ public class DriveController
     	robotDrive.arcadeDrive(moveValue, rotateValue, true);
     	
         Timer.delay(0.01);
-    }
-    
-    public void pickupFunction()
-    {
-    	double x = 0;
-    	
-    	while (xboxController.getRawButton(1))
-    	{
-    		pickupSpeed = (Math.pow(1.4, x) - 1) <= 1 ? (Math.pow(1.4, x) - 1) : 1;
-    		x += 0.1;
-    		
-    		pickUp.set(pickupSpeed);
-    	}
     }
     
     public void tryDrive()
