@@ -8,7 +8,7 @@ public class PickupController
 	private Joystick xboxController;
 	private DigitalInput bottomLimit, topLimit;
 	
-	private static boolean pickupIsRaising = false;
+	private static boolean pickupRaising = false, pickupLowering = false;
 	
 	private static double pickupSpeed = 0;
 	
@@ -31,9 +31,10 @@ public class PickupController
 	// Method needs more work, so far it causes pickupMotor to accelerate as long as button is held
 	public void pickupRaise()
 	{
-		if (!pickupIsRaising)
+		if (!pickupRaising)
 		{
-			pickupIsRaising = true;
+			pickupRaising = true;
+			pickupLowering = false;
 			
 			double x = 0;
     	
@@ -43,9 +44,29 @@ public class PickupController
     			x += 0.1;
     		
     			pickupMotor.set(pickupSpeed);
-    			
     			Timer.delay(0.1);
     		}
+    		
+    		if (topLimit.get())
+    		{
+    			pickupMotor.set(0);
+    		}
+		}
+	}
+	
+	public void pickupLower()
+	{
+		if (!pickupLowering)
+		{
+			pickupLowering = true;
+			pickupRaising = false;
+			
+			double x = 0;
+			
+			while (!bottomLimit.get())
+			{
+				// negative of pickupRaise code
+			}
 		}
 	}
 }
