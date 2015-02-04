@@ -28,7 +28,7 @@ public class PickupController
 		}
 	}
 	
-	// Method needs more work, so far it causes pickupMotor to accelerate as long as button is held
+	// Method needs more work, so far it raises when the button is pressed, accelerates, stops when top limit is reached
 	public void pickupRaise()
 	{
 		if (!pickupRaising)
@@ -65,7 +65,16 @@ public class PickupController
 			
 			while (!bottomLimit.get())
 			{
-				// negative of pickupRaise code
+				pickupSpeed = -(Math.pow(1.4, x) - 1) >= -1 ? -(Math.pow(1.4, x) - 1) : -1;
+				x += 0.1;
+				
+				pickupMotor.set(pickupSpeed);
+				Timer.delay(0.1);
+			}
+			
+			if (topLimit.get())
+			{
+				pickupMotor.set(0);
 			}
 		}
 	}
