@@ -131,7 +131,7 @@ public class DriveController
     		leftMotors[0].set(TEST_MOTOR_SPEED);
     		Utils.printPeridoc("MotorTest", "Testing left motor, index 0.");
     	}
-    	else if (xboxController.getX() > 1)
+    	else if (xboxController.getX() < 0)
     	{
     		leftMotors[1].set(TEST_MOTOR_SPEED);
     		Utils.printPeridoc("MotorTest", "Testing left motor, index 1.");
@@ -142,7 +142,7 @@ public class DriveController
     		rightMotors[0].set(TEST_MOTOR_SPEED);
     		Utils.printPeridoc("MotorTest", "Testing right motor, index 0.");
     	}
-    	else if (xboxController.getY() > 1)
+    	else if (xboxController.getY() < 0)
     	{
     		rightMotors[1].set(TEST_MOTOR_SPEED);
     		Utils.printPeridoc("MotorTest", "Testing right motor, index 1.");
