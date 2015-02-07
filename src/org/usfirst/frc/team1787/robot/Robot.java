@@ -10,48 +10,85 @@ import edu.wpi.first.wpilibj.*;
 
 public class Robot extends IterativeRobot 
 {
-    Joystick xboxController = new Joystick(0);
 	
-	DriveController driveController = new DriveController(11, 12, 14, 16, this.getXboxController());
-	PickupController pickupController = new PickupController(17, 0, 1, this.getXboxController());
-	Pneumatics pneumatics = new Pneumatics();
+    /**
+     * The drive controller.
+     */
+	private DriveController driveController = new DriveController(
+			new int[] {11, 12}, 
+			new int[] {14, 16}, 
+			this.getXboxController()
+			);
 	
-	boolean pickupActive = false;
+	/**
+	 * The pickup controller.
+	 */
+	private PickupController pickupController = new PickupController(17, 0, 1, this.getXboxController());
 	
-	public Joystick getXboxController()
-	{
-		return this.xboxController;
-	}
+	/**
+	 * The pneumatics.
+	 */
+	private Pneumatics pneumatics = new Pneumatics();
 	
+	/**
+	 * The Xbox controller.
+	 */
+    private Joystick xboxController = new Joystick(0);
+	
+	/**
+	 * Creates a new instance of Robot.
+	 */
 	public Robot()
     {
 		Utils.print("Mayonnaise");
     }
 	
-	public void RobotInit()
+	/**
+	 * Get the Xbox controller.
+	 * @return The Xbox controller.
+	 */
+	public Joystick getXboxController()
+	{
+		return this.xboxController;
+	}
+	
+	/**
+	 * Called when the robot turns on.
+	 */
+	public void robotInit()
 	{
 		
 	}
     
-    //Called once when the robot enters autonomous mode
+	/**
+	 * Called 50 times a second when the robot is in autonomous mode.
+	 */
     public void autonomousPeriodic() 
     {
-    	driveController.tryDrive();
+    	// TODO: Replace me
+    	//driveController.tryDrive();
     }
     
-    //Called 50x a second when the robot enters teleop mode
+    /**
+     * Called 50 times a second when the robot is in tele-operated mode.
+     */
     public void teleopPeriodic()
     {
     	driveController.driveControls();
     	pickupController.pickupPeriodic();
     }
     
-    //Called when the robot enters test mode
+    /**
+     * Called when the robot enters test mode.
+     */
     public void testInit() 
     {
     	pneumatics.startCompressor();
     }
     
+    /**
+     * ????
+     */
     public void testPeriodic()
     {
     	pneumatics.solenoidTest();

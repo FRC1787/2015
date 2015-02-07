@@ -5,11 +5,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 /**
  * Various utilities.
  * @author jeremystark & ryan & eben
- *
  */
 public class Utils
 {
-	
 	
 	/**
 	 * Print text to the Driver's Station.

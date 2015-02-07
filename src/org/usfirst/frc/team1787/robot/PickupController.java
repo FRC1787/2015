@@ -2,15 +2,44 @@ package org.usfirst.frc.team1787.robot;
 
 import edu.wpi.first.wpilibj.*;
 
+/**
+ * Controls the pickup controller.
+ * @author Jeremy, Eban, & kind of ry60003333
+ */
 public class PickupController 
 {
+	
+	/**
+	 * The pickup speed???
+	 */
+	private static double pickupSpeed = 0;
+	
+	/**
+	 * The talon for the pickup motor.
+	 */
 	private Talon pickupMotor;
+	
+	/**
+	 * The Xbox controller instance.
+	 */
 	private Joystick xboxController;
+	
+	/**
+	 * ????
+	 */
 	private DigitalInput bottomLimit, topLimit;
 	
-	private static boolean pickupRaising = false, pickupLowering = false;
+	// We should change this to a state machine?
 	
-	private static double pickupSpeed = 0;
+	/**
+	 * Set to true when the pickup is raising.
+	 */
+	private boolean pickupRaising;
+	
+	/**
+	 * Set to true when the pickup is lowering.
+	 */
+	private boolean pickupLowering;
 	
 	public PickupController(int pickupPort, int bottomLimitPort, int topLimitPort, Joystick xboxController)
 	{
@@ -20,17 +49,26 @@ public class PickupController
 		this.topLimit = new DigitalInput(topLimitPort);
 	}
 	
+	/**
+	 * Called 50 times a second in tele-operated mode.
+	 */
 	public void pickupPeriodic()
 	{
 		if (xboxController.getRawButton(1))
 		{
-			this.pickupRaise();
+			this.raisePickupMechanism();
 		}
 	}
 	
-	// Method needs more work, so far it raises when the button is pressed, accelerates, stops when top limit is reached
-	public void pickupRaise()
+	
+	/**
+	 * Should raise the pickup mechanism.
+	 */
+	public void raisePickupMechanism()
 	{
+		// Method needs more work, so far it raises when the button is pressed, 
+		// accelerates, stops when top limit is reached
+		
 		if (!pickupRaising)
 		{
 			pickupRaising = true;
@@ -54,7 +92,10 @@ public class PickupController
 		}
 	}
 	
-	public void pickupLower()
+	/**
+	 * Should the lower the pickup mechanism.
+	 */
+	public void lowerPickupMechanism()
 	{
 		if (!pickupLowering)
 		{

@@ -3,36 +3,85 @@ package org.usfirst.frc.team1787.robot;
 import edu.wpi.first.wpilibj.*;
 
 /**
- * @author jeremystark, ebencarek
+ * Controls the robot in tele-operated mode.
+ * @author jeremystark, ebencarek, Ryan Rule-Hoffman (sometimes)
  **/
-
-public class DriveController 
+public class DriveController
 {
-	//Jaguar Motor Controllers
-    private Talon leftMotor1, leftMotor2, rightMotor1, rightMotor2;
+	// All constants should be declared at the top of files :)
+	// Variables generally go in order of decreasing accessibility
+	// ex. public, then protected, then private
+	
+	/**
+	 * The speed at which to multiply input; must be between 0 and 1.
+	 */
+	public static final double DRIVE_SPEED = 0.5;
+	
+	/**
+	 * ??????
+	 */
+	public static final double MOTOR_INCREMENT = 0.003333;
+	
+	/**
+	 * ??????
+	 */
+	public static final double MOTOR_MAX = 0.5;
+	
+	/**
+	 * The left motors.
+	 */
+    private Talon leftMotors[];
     
-    private Joystick xboxController;
+    /**
+     * The right motors.
+     */
+    private Talon rightMotors[];
     
-    private RobotDrive robotDrive;
+    /**
+     * The single instance of the Xbox controller
+     * that is connected to the driver's station.
+     */
+    private final Joystick xboxController;
     
-    private double moveValue, rotateValue;
+    /**
+     * The instance of the drive class that actually
+     * sends the movement values to the motors.
+     */
+    private final RobotDrive robotDrive;
     
-    private boolean running = true;
+    /**
+     * ???????
+     */
+    private double moveValue;
     
-    public static final double DRIVE_SPEED = 0.5;
-    
-    //requires the port numbers for all motors and joystick number.
-    public DriveController(int leftPort1, int leftPort2, int rightPort1, int rightPort2, Joystick xboxController)
+    /**
+     * ???????
+     */
+    private double rotateValue;
+   
+    /**
+     * Creates a new DriveController.
+     * @param leftPorts The left ports for the motors.
+     * @param rightPorts The right ports for the motors.
+     * @param xboxController The Xbox controller instance.
+     */
+    public DriveController(int[] leftPorts, int[] rightPorts, Joystick xboxController)
     {
-    	//left motors configured
-    	leftMotor1 = new Talon(leftPort1);
-    	leftMotor2 = new Talon(leftPort2);
+    	// Create instances of the left motor
+    	leftMotors = new Talon[leftPorts.length];
+    	for (int i = 0; i < leftPorts.length; i++)
+    	{
+    		leftMotors[i] = new Talon(leftPorts[i]);
+    	}
     	
-    	//right motors configured
-    	rightMotor1 = new Talon(rightPort1);
-    	rightMotor2 = new Talon(rightPort2);
+    	// Create instances of the right moors 
+    	rightMotors = new Talon[rightMotors.length];
+    	for (int i = 0; i < rightPorts.length; i++)
+    	{
+    		rightMotors[i] = new Talon(rightPorts[i]);
+    	}
     	
-    	//Xbox Controller configured
+    	// Create an instance of the Xbox Controller.
     	this.xboxController = xboxController;
     	
     	/*
@@ -44,20 +93,16 @@ public class DriveController
     	 * error.
     	 */
     	
-        robotDrive = new RobotDrive(leftMotor2, leftMotor1, rightMotor2, rightMotor1);
-    	//robotDrive = new RobotDrive(leftMotor2, rightMotor2);
+        robotDrive = new RobotDrive(leftMotors[1], leftMotors[0], rightMotors[1], rightMotors[0]);
     }
     
     public void driveControls() 
     {   
-    	// uncomment following line to print joystick input to console
-    	//Utils.print("X: " + xboxController.getX() + " Y: " + xboxController.getY());
+    	// Uncomment following line to print joy stick input to console
+    	// Utils.print("X: " + xboxController.getX() + " Y: " + xboxController.getY());
     	
     	double oldMoveValue = moveValue;
     	//double oldRotateValue = rotateValue;
-    	
-    	final double MOTOR_INCREMENT = 0.003333;
-    	final double MOTOR_MAX = 0.5;
     	
     	moveValue = -xboxController.getY() * DRIVE_SPEED;
     	rotateValue = -xboxController.getX() * DRIVE_SPEED;
@@ -72,14 +117,10 @@ public class DriveController
         Timer.delay(0.01);
     }
     
-    public void tryDrive()
-    {	
-    	while(running)
-    	{
-    		leftMotor1.set(1);
-    	}
-    }
    
+    /**
+     * Xbox controller reference.
+     */
     public void shiftingControls() 
     {
         //Shifting controls
