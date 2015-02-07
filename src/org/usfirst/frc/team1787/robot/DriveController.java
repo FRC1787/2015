@@ -99,7 +99,7 @@ public class DriveController
     public void driveControls() 
     {   
     	// Uncomment following line to print joy stick input to console
-    	// Utils.print("X: " + xboxController.getX() + " Y: " + xboxController.getY());
+    	Utils.print("X: " + xboxController.getX() + " Y: " + xboxController.getY());
     	
     	double oldMoveValue = moveValue;
     	//double oldRotateValue = rotateValue;
