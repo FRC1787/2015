@@ -35,7 +35,7 @@ public class DriveController
 	/**
 	 * The current drive mode.
 	 */
-	public static final int DRIVE_MODE = DRIVE_MODE_TEST_MOTORS;
+	public static final int DRIVE_MODE = DRIVE_MODE_NORMAL;
 	
 	/**
 	 * The speed at which to multiply input; must be between 0 and 1.
@@ -167,16 +167,16 @@ public class DriveController
     	double oldMoveValue = moveValue;
     	//double oldRotateValue = rotateValue;
     	
-    	moveValue = -xboxController.getY() * DRIVE_SPEED;
-    	rotateValue = -xboxController.getX() * DRIVE_SPEED;
+    	moveValue = xboxController.getY() * DRIVE_SPEED;
+    	rotateValue = xboxController.getX() * DRIVE_SPEED;
     	
-    	if (DRIVE_MODE == DRIVE_MODE_NORMAL)
+    	/*if (DRIVE_MODE == DRIVE_MODE_NORMAL)
     	{
 	    	if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
 	    	{	
 	    		moveValue = oldMoveValue + MOTOR_INCREMENT;
 	    	}
-    	}
+    	}*/
     	
     	robotDrive.arcadeDrive(moveValue, rotateValue, true);
     	
