@@ -48,8 +48,8 @@ public class Robot extends IterativeRobot
 		
 		// Create the DriveController
 		driveController = new DriveController(
-				new int[] {11, 12}, 
 				new int[] {13, 14}, 
+				new int[] {12, 11}, 
 				xboxController
 				);
 		

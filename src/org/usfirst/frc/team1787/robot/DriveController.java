@@ -43,24 +43,24 @@ public class DriveController
 	public static final double DRIVE_SPEED = 0.5;
 	
 	/**
-	 * ??????
+	 * The increment size for the motor speed. 
 	 */
 	public static final double MOTOR_INCREMENT = 0.003333;
 	
 	/**
-	 * ??????
+	 * The maximum motor speed
 	 */
 	public static final double MOTOR_MAX = 0.5;
 	
 	/**
 	 * The left motors.
 	 */
-    private final Talon leftMotors[];
+    private final CANTalon leftMotors[];
     
     /**
      * The right motors.
      */
-    private final Talon rightMotors[];
+    private final CANTalon rightMotors[];
     
     /**
      * The single instance of the Xbox controller
@@ -75,12 +75,12 @@ public class DriveController
     private final RobotDrive robotDrive;
     
     /**
-     * ???????
+     * Used for incrementing the motors' speed.
      */
     private double moveValue;
     
     /**
-     * ???????
+     * Used for incrementing the motors' speed.
      */
     private double rotateValue;
    
@@ -93,17 +93,17 @@ public class DriveController
     public DriveController(int[] leftPorts, int[] rightPorts, Joystick xboxController)
     {
     	// Create instances of the left motor
-    	leftMotors = new Talon[leftPorts.length];
+    	leftMotors = new CANTalon[leftPorts.length];
     	for (int i = 0; i < leftPorts.length; i++)
     	{
-    		leftMotors[i] = new Talon(leftPorts[i]);
+    		leftMotors[i] = new CANTalon(leftPorts[i]);
     	}
     	
     	// Create instances of the right moors 
-    	rightMotors = new Talon[rightPorts.length];
+    	rightMotors = new CANTalon[rightPorts.length];
     	for (int i = 0; i < rightPorts.length; i++)
     	{
-    		rightMotors[i] = new Talon(rightPorts[i]);
+    		rightMotors[i] = new CANTalon(rightPorts[i]);
     	}
     	
     	// Create an instance of the Xbox Controller.
@@ -118,7 +118,7 @@ public class DriveController
     	 * error.
     	 */
     	
-        robotDrive = new RobotDrive(leftMotors[1], leftMotors[0], rightMotors[1], rightMotors[0]);
+        robotDrive = new RobotDrive(leftMotors[0], leftMotors[1], rightMotors[0], rightMotors[1]);
     }
     
     /**
