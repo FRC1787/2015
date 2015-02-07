@@ -14,16 +14,12 @@ public class Robot extends IterativeRobot
     /**
      * The drive controller.
      */
-	private DriveController driveController = new DriveController(
-			new int[] {11, 12}, 
-			new int[] {14, 16}, 
-			this.getXboxController()
-			);
+	private DriveController driveController;
 	
 	/**
 	 * The pickup controller.
 	 */
-	private PickupController pickupController = new PickupController(17, 0, 1, this.getXboxController());
+	private PickupController pickupController;
 	
 	/**
 	 * The pneumatics.
@@ -33,14 +29,27 @@ public class Robot extends IterativeRobot
 	/**
 	 * The Xbox controller.
 	 */
-    private Joystick xboxController = new Joystick(0);
+    private Joystick xboxController;
 	
 	/**
 	 * Creates a new instance of Robot.
 	 */
 	public Robot()
     {
-		Utils.print("Mayonnaise");
+		// Initialize the XboxController.
+		xboxController = new Joystick(0);
+		
+		Utils.print("XboxController: " + xboxController);
+		
+		// Create the DriveController
+		driveController = new DriveController(
+				new int[] {11, 12}, 
+				new int[] {14, 16}, 
+				xboxController
+				);
+		
+		// Create the PickupController
+		pickupController = new PickupController(17, 0, 1, xboxController);
     }
 	
 	/**
