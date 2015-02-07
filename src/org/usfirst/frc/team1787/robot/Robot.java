@@ -14,22 +14,27 @@ public class Robot extends IterativeRobot
     /**
      * The drive controller.
      */
-	private DriveController driveController;
+	private final DriveController driveController;
 	
 	/**
 	 * The pickup controller.
 	 */
-	private PickupController pickupController;
+	private final PickupController pickupController;
 	
 	/**
 	 * The pneumatics.
 	 */
-	private Pneumatics pneumatics = new Pneumatics();
+	private final Pneumatics pneumatics = new Pneumatics();
 	
 	/**
 	 * The Xbox controller.
 	 */
-    private Joystick xboxController;
+    private final Joystick xboxController;
+    
+    /**
+     * The manager of power.
+     */
+    private final PowerManager powerManager;
 	
 	/**
 	 * Creates a new instance of Robot.
@@ -50,6 +55,9 @@ public class Robot extends IterativeRobot
 		
 		// Create the PickupController
 		pickupController = new PickupController(17, 0, 1, xboxController);
+		
+		// Create the PowerManager
+		powerManager = new PowerManager();
     }
 	
 	/**
@@ -66,7 +74,7 @@ public class Robot extends IterativeRobot
 	 */
 	public void robotInit()
 	{
-		
+		powerManager.initPower();
 	}
     
 	/**
