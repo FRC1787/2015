@@ -24,7 +24,7 @@ public class Robot extends IterativeRobot
 	/**
 	 * The pneumatics.
 	 */
-	private final Pneumatics pneumatics = new Pneumatics();
+	private final Pneumatics pneumatics;
 	
 	/**
 	 * The Xbox controller.
@@ -56,6 +56,9 @@ public class Robot extends IterativeRobot
 		// Create the PickupController
 		pickupController = new PickupController(17, 0, 1, xboxController);
 		
+		// Create the Pneumatics
+		pneumatics = new Pneumatics();
+		
 		// Create the PowerManager
 		powerManager = new PowerManager();
     }
@@ -75,6 +78,7 @@ public class Robot extends IterativeRobot
 	public void robotInit()
 	{
 		powerManager.initPower();
+		pneumatics.initPneumatics();
 	}
     
 	/**

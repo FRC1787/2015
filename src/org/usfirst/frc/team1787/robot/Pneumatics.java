@@ -38,6 +38,14 @@ public class Pneumatics
 	}
 	
 	/**
+	 * Initialize the Pneumatics.
+	 */
+	public void initPneumatics()
+	{
+		compressor.clearAllPCMStickyFaults();
+	}
+	
+	/**
 	 * Start the compressor.
 	 */
 	public void startCompressor()
