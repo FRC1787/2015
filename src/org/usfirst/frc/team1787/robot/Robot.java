@@ -44,7 +44,7 @@ public class Robot extends IterativeRobot
 		// Create the DriveController
 		driveController = new DriveController(
 				new int[] {11, 12}, 
-				new int[] {14, 16}, 
+				new int[] {13, 14}, 
 				xboxController
 				);
 		
@@ -83,8 +83,8 @@ public class Robot extends IterativeRobot
      */
     public void teleopPeriodic()
     {
-    	driveController.driveControls();
-    	pickupController.pickupPeriodic();
+    	driveController.drivePeriodic();
+    	//pickupController.pickupPeriodic();
     }
     
     /**

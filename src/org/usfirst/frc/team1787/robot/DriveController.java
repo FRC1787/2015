@@ -13,6 +13,31 @@ public class DriveController
 	// ex. public, then protected, then private
 	
 	/**
+	 * The motor speed for testing.
+	 */
+	public static final double TEST_MOTOR_SPEED = 0.3;
+	
+	/**
+	 * The constant for the normal drive mode.
+	 */
+	public static final int DRIVE_MODE_NORMAL = 0;
+	
+	/**
+	 * The constant for the test drive mode.
+	 */
+	public static final int DRIVE_MODE_TEST = 1;
+	
+	/**
+	 * The constant for the test motors drive mode.
+	 */
+	private static final int DRIVE_MODE_TEST_MOTORS = 2;
+	
+	/**
+	 * The current drive mode.
+	 */
+	public static final int DRIVE_MODE = DRIVE_MODE_TEST_MOTORS;
+	
+	/**
 	 * The speed at which to multiply input; must be between 0 and 1.
 	 */
 	public static final double DRIVE_SPEED = 0.5;
@@ -30,12 +55,12 @@ public class DriveController
 	/**
 	 * The left motors.
 	 */
-    private Talon leftMotors[];
+    private final Talon leftMotors[];
     
     /**
      * The right motors.
      */
-    private Talon rightMotors[];
+    private final Talon rightMotors[];
     
     /**
      * The single instance of the Xbox controller
@@ -96,10 +121,48 @@ public class DriveController
         robotDrive = new RobotDrive(leftMotors[1], leftMotors[0], rightMotors[1], rightMotors[0]);
     }
     
-    public void driveControls() 
-    {   
+    /**
+     * Test the individual motors.
+     */
+    private void testMotors()
+    {
+    	if (xboxController.getX() > 0)
+    	{
+    		leftMotors[0].set(TEST_MOTOR_SPEED);
+    		Utils.printPeridoc("MotorTest", "Testing left motor, index 0.");
+    	}
+    	else if (xboxController.getX() > 1)
+    	{
+    		leftMotors[1].set(TEST_MOTOR_SPEED);
+    		Utils.printPeridoc("MotorTest", "Testing left motor, index 1.");
+    	}
+    	
+    	if (xboxController.getY() > 0)
+    	{
+    		rightMotors[0].set(TEST_MOTOR_SPEED);
+    		Utils.printPeridoc("MotorTest", "Testing right motor, index 0.");
+    	}
+    	else if (xboxController.getY() > 1)
+    	{
+    		rightMotors[1].set(TEST_MOTOR_SPEED);
+    		Utils.printPeridoc("MotorTest", "Testing right motor, index 1.");
+    	}
+    }
+    
+    /**
+     * Called 50 times a second during tele-operated mode.
+     */
+    public void drivePeriodic() 
+    {
+    	
+    	if (DRIVE_MODE == DRIVE_MODE_TEST_MOTORS)
+    	{
+    		testMotors();
+    		return;
+    	}
+    	
     	// Uncomment following line to print joy stick input to console
-    	Utils.print("X: " + xboxController.getX() + " Y: " + xboxController.getY());
+    	Utils.printPeridoc("Drive", "X: " + xboxController.getX() + " Y: " + xboxController.getY());
     	
     	double oldMoveValue = moveValue;
     	//double oldRotateValue = rotateValue;
@@ -107,9 +170,12 @@ public class DriveController
     	moveValue = -xboxController.getY() * DRIVE_SPEED;
     	rotateValue = -xboxController.getX() * DRIVE_SPEED;
     	
-    	if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
-    	{	
-    		moveValue = oldMoveValue + MOTOR_INCREMENT;
+    	if (DRIVE_MODE == DRIVE_MODE_NORMAL)
+    	{
+	    	if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
+	    	{	
+	    		moveValue = oldMoveValue + MOTOR_INCREMENT;
+	    	}
     	}
     	
     	robotDrive.arcadeDrive(moveValue, rotateValue, true);
