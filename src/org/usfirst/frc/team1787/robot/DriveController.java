@@ -75,7 +75,7 @@ public class DriveController
     	}
     	
     	// Create instances of the right moors 
-    	rightMotors = new Talon[rightMotors.length];
+    	rightMotors = new Talon[rightPorts.length];
     	for (int i = 0; i < rightPorts.length; i++)
     	{
     		rightMotors[i] = new Talon(rightPorts[i]);
