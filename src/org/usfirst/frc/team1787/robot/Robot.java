@@ -92,7 +92,7 @@ public class Robot extends IterativeRobot
      */
     public void testInit() 
     {
-    	pneumatics.startCompressor();
+    	//pneumatics.startCompressor();
     }
     
     /**
@@ -100,6 +100,6 @@ public class Robot extends IterativeRobot
      */
     public void testPeriodic()
     {
-    	pneumatics.solenoidTest();
+    	//pneumatics.solenoidTest();
     }
 }
