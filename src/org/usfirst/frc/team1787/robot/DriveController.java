@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1787.robot;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 
 /**
  * Controls the robot in tele-operated mode.
@@ -83,6 +84,11 @@ public class DriveController
      * Used for incrementing the motors' speed.
      */
     private double rotateValue;
+    
+    /**
+     * The encoders measuring the rotation of the motors
+     */
+    private Encoder leftEncoder, rightEncoder;
    
     /**
      * Creates a new DriveController.
@@ -90,24 +96,28 @@ public class DriveController
      * @param rightPorts The right ports for the motors.
      * @param xboxController The Xbox controller instance.
      */
-    public DriveController(int[] leftPorts, int[] rightPorts, Joystick xboxController)
+    public DriveController(int[] leftMotorPorts, int[] rightMotorPorts, int[] leftEncoderPorts, int[] rightEncoderPorts, Joystick xboxController)
     {
     	// Create instances of the left motor
-    	leftMotors = new CANTalon[leftPorts.length];
-    	for (int i = 0; i < leftPorts.length; i++)
+    	leftMotors = new CANTalon[leftMotorPorts.length];
+    	for (int i = 0; i < leftMotorPorts.length; i++)
     	{
-    		leftMotors[i] = new CANTalon(leftPorts[i]);
+    		leftMotors[i] = new CANTalon(leftMotorPorts[i]);
     	}
     	
     	// Create instances of the right moors 
-    	rightMotors = new CANTalon[rightPorts.length];
-    	for (int i = 0; i < rightPorts.length; i++)
+    	rightMotors = new CANTalon[rightMotorPorts.length];
+    	for (int i = 0; i < rightMotorPorts.length; i++)
     	{
-    		rightMotors[i] = new CANTalon(rightPorts[i]);
+    		rightMotors[i] = new CANTalon(rightMotorPorts[i]);
     	}
     	
     	// Create an instance of the Xbox Controller.
     	this.xboxController = xboxController;
+    	
+    	// Create instances of the encoders
+    	this.leftEncoder = new Encoder(leftEncoderPorts[0], leftEncoderPorts[1], false, EncodingType.k4X);
+    	this.rightEncoder = new Encoder(rightEncoderPorts[0], rightEncoderPorts[1], false, EncodingType.k4X);
     	
     	/*
     	 * Tested each set of Jaguars individually, determined that both sets work.
@@ -164,7 +174,7 @@ public class DriveController
     	// Uncomment following line to print joy stick input to console
     	Utils.printPeridoc("Drive", "X: " + xboxController.getX() + " Y: " + xboxController.getY());
     	
-    	double oldMoveValue = moveValue;
+    	//double oldMoveValue = moveValue;
     	//double oldRotateValue = rotateValue;
     	
     	moveValue = xboxController.getY() * DRIVE_SPEED;
@@ -179,6 +189,14 @@ public class DriveController
     	}*/
     	
     	robotDrive.arcadeDrive(moveValue, rotateValue, true);
+    	
+    	double leftEncoderRate = leftEncoder.getRate();
+    	double rightEncoderRate = rightEncoder.getRate();
+    	
+    	if (leftEncoderRate != rightEncoderRate)
+    	{
+    		// adjust motors to account for differences
+    	}
     	
         Timer.delay(0.01);
     }
