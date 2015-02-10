@@ -19,24 +19,35 @@ public class DriveController
 	public static final double TEST_MOTOR_SPEED = 0.3;
 	
 	/**
-	 * The constant for the normal drive mode.
+	 * Constants for different drive modes
+	 * @author EbenCarek
+	 *
 	 */
-	public static final int DRIVE_MODE_NORMAL = 0;
-	
-	/**
-	 * The constant for the test drive mode.
-	 */
-	public static final int DRIVE_MODE_TEST = 1;
-	
-	/**
-	 * The constant for the test motors drive mode.
-	 */
-	private static final int DRIVE_MODE_TEST_MOTORS = 2;
+	public enum DriveMode
+	{
+		DRIVE_MODE_NORMAL,
+		DRIVE_MODE_TEST,
+		DRIVE_MODE_TEST_MOTORS
+	}
 	
 	/**
 	 * The current drive mode.
 	 */
-	public static final int DRIVE_MODE = DRIVE_MODE_NORMAL;
+	private DriveMode driveMode;
+	
+	/**
+     * Different possibilities for the driving state of the robot
+     * @author EbenCarek
+     *
+     */
+    private enum DriveState
+    {
+    	FORWARD,
+    	BACKWARD,
+    	NOT_MOVING
+    }
+    
+    private DriveState driveState;
 	
 	/**
 	 * The speed at which to multiply input; must be between 0 and 1.
@@ -96,7 +107,7 @@ public class DriveController
      * @param rightPorts The right ports for the motors.
      * @param xboxController The Xbox controller instance.
      */
-    public DriveController(int[] leftMotorPorts, int[] rightMotorPorts, int[] leftEncoderPorts, int[] rightEncoderPorts, Joystick xboxController)
+    public DriveController(DriveMode driveMode, int[] leftMotorPorts, int[] rightMotorPorts, int[] leftEncoderPorts, int[] rightEncoderPorts, Joystick xboxController)
     {
     	// Create instances of the left motor
     	leftMotors = new CANTalon[leftMotorPorts.length];
@@ -119,16 +130,11 @@ public class DriveController
     	this.leftEncoder = new Encoder(leftEncoderPorts[0], leftEncoderPorts[1], false, EncodingType.k4X);
     	this.rightEncoder = new Encoder(rightEncoderPorts[0], rightEncoderPorts[1], false, EncodingType.k4X);
     	
-    	/*
-    	 * Tested each set of Jaguars individually, determined that both sets work.
-    	 * Switched order in constructor (back motors passed in as front motors, and vice versa)
-    	 * and all four work correctly
-    	 * 
-    	 * Tried once more with original configuration, and it works properly. Must be electrical
-    	 * error.
-    	 */
-    	
         robotDrive = new RobotDrive(leftMotors[0], leftMotors[1], rightMotors[0], rightMotors[1]);
+        
+        // Set driveState and driveMode
+        this.driveMode = driveMode;
+        this.driveState = DriveState.NOT_MOVING;
     }
     
     /**
@@ -139,23 +145,23 @@ public class DriveController
     	if (xboxController.getX() > 0)
     	{
     		leftMotors[0].set(TEST_MOTOR_SPEED);
-    		Utils.printPeridoc("MotorTest", "Testing left motor, index 0.");
+    		Utils.printPeriodic("MotorTest", "Testing left motor, index 0.");
     	}
     	else if (xboxController.getX() < 0)
     	{
     		leftMotors[1].set(TEST_MOTOR_SPEED);
-    		Utils.printPeridoc("MotorTest", "Testing left motor, index 1.");
+    		Utils.printPeriodic("MotorTest", "Testing left motor, index 1.");
     	}
     	
     	if (xboxController.getY() > 0)
     	{
     		rightMotors[0].set(TEST_MOTOR_SPEED);
-    		Utils.printPeridoc("MotorTest", "Testing right motor, index 0.");
+    		Utils.printPeriodic("MotorTest", "Testing right motor, index 0.");
     	}
     	else if (xboxController.getY() < 0)
     	{
     		rightMotors[1].set(TEST_MOTOR_SPEED);
-    		Utils.printPeridoc("MotorTest", "Testing right motor, index 1.");
+    		Utils.printPeriodic("MotorTest", "Testing right motor, index 1.");
     	}
     }
     
@@ -165,42 +171,97 @@ public class DriveController
     public void drivePeriodic() 
     {
     	
-    	if (DRIVE_MODE == DRIVE_MODE_TEST_MOTORS)
+    	if (driveMode == DriveMode.DRIVE_MODE_TEST_MOTORS)
     	{
     		testMotors();
     		return;
     	}
     	
     	// Uncomment following line to print joy stick input to console
-    	Utils.printPeridoc("Drive", "X: " + xboxController.getX() + " Y: " + xboxController.getY());
+    	Utils.printPeriodic("Joystick", "X: " + xboxController.getX() + " Y: " + xboxController.getY());
     	
-    	//double oldMoveValue = moveValue;
+    	double oldMoveValue = moveValue;
     	//double oldRotateValue = rotateValue;
     	
-    	moveValue = xboxController.getY() * DRIVE_SPEED;
+    	moveValue = -xboxController.getY() * DRIVE_SPEED;
     	rotateValue = xboxController.getX() * DRIVE_SPEED;
     	
-    	/*if (DRIVE_MODE == DRIVE_MODE_NORMAL)
+    	// Uncomment following line to print move and rotate values to console
+    	Utils.printPeriodic("Drive", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
+    	
+    	if (moveValue > 0)
     	{
-	    	if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
-	    	{	
-	    		moveValue = oldMoveValue + MOTOR_INCREMENT;
+    		driveState = DriveState.FORWARD;
+    	}
+    	else if (moveValue < 0)
+    	{
+    		driveState = DriveState.BACKWARD;
+    	}
+    	else
+    	{
+    		driveState = DriveState.NOT_MOVING;
+    	}
+    	
+    	if (driveMode == DriveMode.DRIVE_MODE_NORMAL)
+    	{
+	    	if (driveState == DriveState.FORWARD)
+	    	{
+	    		if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
+	    		{	
+	    			// Increment the moveValue for gradual acceleration forward
+	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
+	    		}
+	    		// Uncomment the following to allow gradual deceleration
+	    		/*else if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > 0)
+	    		{
+	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
+	    		}*/
 	    	}
+	    	else if (driveState == DriveState.BACKWARD)
+	    	{
+	    		if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > -MOTOR_MAX)
+	    		{
+	    			// Increment the moveValue for gradual acceleration backward
+	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
+	    		}
+	    		// Uncomment the following to allow gradual deceleration
+	    		/*else if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < 0)
+	    		{
+	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
+	    		}*/
+	    	}
+    	}
+
+    	// TODO: program motor correction based on encoders. Primitive version below
+    	
+    	/*double leftEncoderRate = leftEncoder.getRate();
+    	double rightEncoderRate = rightEncoder.getRate();
+    	
+    	if (leftEncoderRate != rightEncoderRate && rotateValue == 0 && driveState == DriveState.kForward)
+    	{
+    		// adjust motors to account for differences
+    		if (leftEncoderRate < rightEncoderRate)
+    		{
+    			rotateValue += 0.1;
+    		}
+    		else
+    		{
+    			rotateValue -= 0.1;
+    		}
     	}*/
     	
     	robotDrive.arcadeDrive(moveValue, rotateValue, true);
     	
-    	double leftEncoderRate = leftEncoder.getRate();
-    	double rightEncoderRate = rightEncoder.getRate();
-    	
-    	if (leftEncoderRate != rightEncoderRate)
-    	{
-    		// adjust motors to account for differences
-    	}
-    	
         Timer.delay(0.01);
     }
     
+    /*private void drive()
+    {	
+    	while (driveState == DriveState.kForward)
+    	{
+    		
+    	}
+    }*/
    
     /**
      * Xbox controller reference.

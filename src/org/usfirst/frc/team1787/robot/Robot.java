@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team1787.robot;
 
+import org.usfirst.frc.team1787.robot.DriveController.DriveMode;
+
 import edu.wpi.first.wpilibj.*;
 
 public class Robot extends IterativeRobot 
@@ -48,6 +50,7 @@ public class Robot extends IterativeRobot
 		
 		// Create the DriveController
 		driveController = new DriveController(
+				DriveMode.DRIVE_MODE_NORMAL,
 				new int[] {13, 14}, 
 				new int[] {12, 11},
 				new int[] {6, 7},

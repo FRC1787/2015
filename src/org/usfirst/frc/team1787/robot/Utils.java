@@ -37,7 +37,7 @@ public class Utils
 	 * @param name The name for the message for rate limiting.
 	 * @param text The text to print.
 	 */
-	public static void printPeridoc(String name, String text)
+	public static void printPeriodic(String name, String text)
 	{
 		// Grab the last time that a message with this name was printed
 		Object timeObject = timestamps.get(name);

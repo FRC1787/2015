@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.*;
 
 /**
  * Controls the Pneumatics.
- * @author Jeremy, Eban, & ry60003333
+ * @author Jeremy, Eben, & ry60003333
  *
  */
 public class Pneumatics 
