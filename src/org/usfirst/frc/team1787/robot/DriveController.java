@@ -27,7 +27,8 @@ public class DriveController
 	{
 		DRIVE_MODE_NORMAL,
 		DRIVE_MODE_TEST,
-		DRIVE_MODE_TEST_MOTORS
+		DRIVE_MODE_TEST_MOTORS,
+		DRIVE_MODE_INCREMENTAL
 	}
 	
 	/**
@@ -55,6 +56,11 @@ public class DriveController
 	public static final double DRIVE_SPEED = 0.5;
 	
 	/**
+	 * The speed that the robot rotates at.
+	 */
+	public static final double ROTATE_SPEED = 0.2;
+	
+	/**
 	 * The increment size for the motor speed. 
 	 */
 	public static final double MOTOR_INCREMENT = 0.003333;
@@ -62,7 +68,12 @@ public class DriveController
 	/**
 	 * The maximum motor speed
 	 */
-	public static final double MOTOR_MAX = 0.5;
+	public static final double MOTOR_MAX = 0.6;
+	
+	/**
+	 * The minimum speed that the motor moves at.
+	 */
+	public static final double MOTOR_MIN = 0.3;
 	
 	/**
 	 * The left motors.
@@ -137,6 +148,144 @@ public class DriveController
         this.driveState = DriveState.NOT_MOVING;
     }
     
+    
+    /**
+     * Called 50 times a second during tele-operated mode.
+     */
+    public void drivePeriodic() 
+    {
+    	
+    	if (driveMode == DriveMode.DRIVE_MODE_TEST_MOTORS)
+    	{
+    		testMotors();
+    		return;
+    	}
+    	
+    	// Uncomment following line to print joy stick input to console
+    	//Utils.printPeriodic("Joystick", "X: " + xboxController.getX() + " Y: " + xboxController.getY());
+    	
+    	double oldMoveValue = moveValue;
+    	//double oldRotateValue = rotateValue;
+    	
+    	// Uncomment following line to print move and rotate values to console
+    	Utils.printPeriodic("Drive", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
+    	
+    	/**
+    	 * Determines the DriveState of the robot
+    	 */
+    	if (moveValue > 0)
+    	{
+    		driveState = DriveState.FORWARD;
+    	}
+    	else if (moveValue < 0)
+    	{
+    		driveState = DriveState.BACKWARD;
+    	}
+    	else
+    	{
+    		driveState = DriveState.NOT_MOVING;
+    	}
+    	
+    	/**
+    	 * Incremental DriveMode
+    	 */
+    	if (driveMode == DriveMode.DRIVE_MODE_INCREMENTAL)
+    	{
+    		//Why do we have this??
+    		moveValue = -xboxController.getY() * DRIVE_SPEED;
+        	rotateValue = xboxController.getX() * ROTATE_SPEED;
+    		
+	    	if (driveState == DriveState.FORWARD)
+	    	{
+	    		if(moveValue < MOTOR_MIN)
+	    		{
+	    			moveValue = MOTOR_MIN;
+	    		}
+	    		
+	    		if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
+	    		{	
+	    			// Increment the moveValue for gradual acceleration forward
+	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
+	    		}
+	    		// Uncomment the following to allow gradual deceleration
+	    		else if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > 0)
+	    		{
+	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
+	    		}
+	    	}
+	    	
+	    	if (driveState == DriveState.BACKWARD)
+	    	{
+	    		
+	    		if(moveValue < MOTOR_MIN)
+	    		
+	    		if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > -MOTOR_MAX)
+	    		{
+	    			// Increment the moveValue for gradual acceleration backward
+	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
+	    		}
+	    		// Uncomment the following to allow gradual deceleration
+	    		else if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < 0)
+	    		{
+	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
+	    		}
+	    	}
+	    	
+	    	robotDrive.arcadeDrive(moveValue, rotateValue, true);
+	    	
+	        Timer.delay(0.01);
+    	}
+    	
+    	if(driveMode == DriveMode.DRIVE_MODE_NORMAL)
+    	{
+    		moveValue = -xboxController.getY() * DRIVE_SPEED;
+        	rotateValue = xboxController.getX() * ROTATE_SPEED;
+        	
+        	robotDrive.arcadeDrive(moveValue, rotateValue, true);
+        	
+            Timer.delay(0.01);
+    	}
+
+    	// TODO: program motor correction based on encoders. Primitive version below
+    	
+    	/*double leftEncoderRate = leftEncoder.getRate();
+    	double rightEncoderRate = rightEncoder.getRate();
+    	
+    	if (leftEncoderRate != rightEncoderRate && rotateValue == 0 && driveState == DriveState.kForward)
+    	{
+    		// adjust motors to account for differences
+    		if (leftEncoderRate < rightEncoderRate)
+    		{
+    			rotateValue += 0.1;
+    		}
+    		else
+    		{
+    			rotateValue -= 0.1;
+    		}
+    	}*/
+    }
+   
+    /**
+     * Xbox controller reference.
+     */
+    public void shiftingControls() 
+    {
+        //Shifting controls
+        /*if (xboxController.getRawButton(5))
+        {
+            gearShifter.set(DoubleSolenoid.Value.kForward);
+            shifterPosition = false;
+        }
+
+        else if (xboxController.getRawButton(6))
+        {
+            gearShifter.set(DoubleSolenoid.Value.kReverse);
+            shifterPosition = true;
+        }*/
+    }  
+    
+    /* All testing methods should be below here - for Organization*/
+    
     /**
      * Test the individual motors.
      */
@@ -164,121 +313,4 @@ public class DriveController
     		Utils.printPeriodic("MotorTest", "Testing right motor, index 1.");
     	}
     }
-    
-    /**
-     * Called 50 times a second during tele-operated mode.
-     */
-    public void drivePeriodic() 
-    {
-    	
-    	if (driveMode == DriveMode.DRIVE_MODE_TEST_MOTORS)
-    	{
-    		testMotors();
-    		return;
-    	}
-    	
-    	// Uncomment following line to print joy stick input to console
-    	Utils.printPeriodic("Joystick", "X: " + xboxController.getX() + " Y: " + xboxController.getY());
-    	
-    	double oldMoveValue = moveValue;
-    	//double oldRotateValue = rotateValue;
-    	
-    	moveValue = -xboxController.getY() * DRIVE_SPEED;
-    	rotateValue = xboxController.getX() * DRIVE_SPEED;
-    	
-    	// Uncomment following line to print move and rotate values to console
-    	Utils.printPeriodic("Drive", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
-    	
-    	if (moveValue > 0)
-    	{
-    		driveState = DriveState.FORWARD;
-    	}
-    	else if (moveValue < 0)
-    	{
-    		driveState = DriveState.BACKWARD;
-    	}
-    	else
-    	{
-    		driveState = DriveState.NOT_MOVING;
-    	}
-    	
-    	if (driveMode == DriveMode.DRIVE_MODE_NORMAL)
-    	{
-	    	if (driveState == DriveState.FORWARD)
-	    	{
-	    		if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
-	    		{	
-	    			// Increment the moveValue for gradual acceleration forward
-	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
-	    		}
-	    		// Uncomment the following to allow gradual deceleration
-	    		/*else if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > 0)
-	    		{
-	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
-	    		}*/
-	    	}
-	    	else if (driveState == DriveState.BACKWARD)
-	    	{
-	    		if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > -MOTOR_MAX)
-	    		{
-	    			// Increment the moveValue for gradual acceleration backward
-	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
-	    		}
-	    		// Uncomment the following to allow gradual deceleration
-	    		/*else if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < 0)
-	    		{
-	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
-	    		}*/
-	    	}
-    	}
-
-    	// TODO: program motor correction based on encoders. Primitive version below
-    	
-    	/*double leftEncoderRate = leftEncoder.getRate();
-    	double rightEncoderRate = rightEncoder.getRate();
-    	
-    	if (leftEncoderRate != rightEncoderRate && rotateValue == 0 && driveState == DriveState.kForward)
-    	{
-    		// adjust motors to account for differences
-    		if (leftEncoderRate < rightEncoderRate)
-    		{
-    			rotateValue += 0.1;
-    		}
-    		else
-    		{
-    			rotateValue -= 0.1;
-    		}
-    	}*/
-    	
-    	robotDrive.arcadeDrive(moveValue, rotateValue, true);
-    	
-        Timer.delay(0.01);
-    }
-    
-    /*private void drive()
-    {	
-    	while (driveState == DriveState.kForward)
-    	{
-    		
-    	}
-    }*/
-   
-    /**
-     * Xbox controller reference.
-     */
-    public void shiftingControls() 
-    {
-        //Shifting controls
-        /*if (xboxController.getRawButton(5))
-        {
-            gearShifter.set(DoubleSolenoid.Value.kForward);
-            shifterPosition = false;
-        }
-
-        else if (xboxController.getRawButton(6))
-        {
-            gearShifter.set(DoubleSolenoid.Value.kReverse);
-            shifterPosition = true;
-        }*/
-    }  
 }

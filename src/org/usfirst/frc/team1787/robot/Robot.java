@@ -50,7 +50,7 @@ public class Robot extends IterativeRobot
 		
 		// Create the DriveController
 		driveController = new DriveController(
-				DriveMode.DRIVE_MODE_NORMAL,
+				DriveMode.DRIVE_MODE_INCREMENTAL,
 				new int[] {13, 14}, 
 				new int[] {12, 11},
 				new int[] {6, 7},
