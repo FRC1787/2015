@@ -62,17 +62,21 @@ public class PickupController
 	 */
 	public void pickupControl()
 	{
-		if(xboxController.getRawButton(1))
+		if (xboxController.getRawButton(1) && !topLimit.get())
 		{
 			pickupMotor.set(0.5);
-		} else {
+		} 
+		else 
+		{
 			pickupMotor.set(0);
 		}
 		
-		if(xboxController.getRawButton(2))
+		if (xboxController.getRawButton(2) && !bottomLimit.get())
 		{
 			pickupMotor.set(-0.5);
-		} else {
+		} 
+		else 
+		{
 			pickupMotor.set(0);
 		}
 	}
