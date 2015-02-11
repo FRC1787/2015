@@ -58,7 +58,7 @@ public class DriveController
 	/**
 	 * The speed that the robot rotates at.
 	 */
-	public static final double ROTATE_SPEED = 0.2;
+	public static final double ROTATE_SPEED = 0.5;
 	
 	/**
 	 * The increment size for the motor speed. 
@@ -73,7 +73,7 @@ public class DriveController
 	/**
 	 * The minimum speed at which the motor moves
 	 */
-	public static final double MOTOR_MIN = 0.3;
+	public static final double MOTOR_MIN = 0.4;
 	
 	/**
 	 * The left motors.
