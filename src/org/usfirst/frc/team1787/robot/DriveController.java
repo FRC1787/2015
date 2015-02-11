@@ -58,7 +58,7 @@ public class DriveController
 	/**
 	 * The speed that the robot rotates at.
 	 */
-	public static final double ROTATE_SPEED = 0.5;
+	public static final double ROTATE_SPEED = 0.3;
 	
 	/**
 	 * The increment size for the motor speed. 
@@ -68,12 +68,12 @@ public class DriveController
 	/**
 	 * The maximum motor speed
 	 */
-	public static final double MOTOR_MAX = 0.6;
+	public static final double MOTOR_MAX = DRIVE_SPEED;
 	
 	/**
 	 * The minimum speed at which the motor moves
 	 */
-	public static final double MOTOR_MIN = 0.4;
+	public static final double MOTOR_MIN = 0.2;
 	
 	/**
 	 * The left motors.
@@ -173,11 +173,18 @@ public class DriveController
     	double oldMoveValue = moveValue;
     	//double oldRotateValue = rotateValue;
     	
-    	moveValue = -xboxController.getY() * DRIVE_SPEED;
+    	/**
+    	 * Normally moveValue should be set to -xboxController.getY().
+    	 * There is a wiring problem that causes left motors to spin one direction when set to a positive value
+    	 * and right motors to spin in the opposite direction when passed the same value.
+    	 * When driven at the same time, positive values cause both motors to drive backwards and negative values
+    	 * cause motors to drive forwards. So for the time being, forwards is backwards, and backwards is forwards,
+    	 * and moveValue is set to xboxController.getY().
+    	 */
+    	moveValue = xboxController.getY() * DRIVE_SPEED;
     	rotateValue = xboxController.getX() * ROTATE_SPEED;
     	
-    	// Uncomment following line to print move and rotate values to console
-    	Utils.printPeriodic("Drive", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
+    	Utils.printPeriodic("Drive Before", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
     	
     	/**
     	 * Determines the DriveState of the robot
@@ -206,8 +213,7 @@ public class DriveController
 	    		{
 	    			moveValue = MOTOR_MIN;
 	    		}
-	    		
-	    		if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
+	    		else if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
 	    		{	
 	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
 	    		}
@@ -224,8 +230,7 @@ public class DriveController
 	    		{
 	    			moveValue = -MOTOR_MIN;
 	    		}
-	    		
-	    		if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > -MOTOR_MAX)
+	    		else if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > -MOTOR_MAX)
 	    		{
 	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
 	    		}
@@ -240,13 +245,15 @@ public class DriveController
 	    		moveValue = 0;
 	    	}
 	    	
+	    	// Uncomment following line to print move and rotate values to console
+	    	Utils.printPeriodic("Drive After", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
+	    	
 	    	robotDrive.arcadeDrive(moveValue, rotateValue, true);
 	    	
 	    	// Do we really need this delay since this code is called 50x a second instead of in a while loop?
 	        Timer.delay(0.01);
     	}
-    	
-    	if (driveMode == DriveMode.DRIVE_MODE_NORMAL)
+    	else if (driveMode == DriveMode.DRIVE_MODE_NORMAL)
     	{
         	robotDrive.arcadeDrive(moveValue, rotateValue, true);
             Timer.delay(0.01);
