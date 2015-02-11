@@ -59,7 +59,7 @@ public class Robot extends IterativeRobot
 				);
 		
 		// Create the PickupController
-		pickupController = new PickupController(17, 0, 1, xboxController);
+		pickupController = new PickupController(15, 0, 1, xboxController);
 		
 		// Create the Pneumatics
 		pneumatics = new Pneumatics();
@@ -102,6 +102,7 @@ public class Robot extends IterativeRobot
     {
     	driveController.drivePeriodic();
     	//pickupController.pickupPeriodic();
+    	pickupController.pickupControl();
     }
     
     /**

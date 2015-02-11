@@ -17,7 +17,7 @@ public class PickupController
 	/**
 	 * The talon for the pickup motor.
 	 */
-	private Talon pickupMotor;
+	private CANTalon pickupMotor;
 	
 	/**
 	 * The Xbox controller instance.
@@ -43,7 +43,7 @@ public class PickupController
 	
 	public PickupController(int pickupPort, int bottomLimitPort, int topLimitPort, Joystick xboxController)
 	{
-		this.pickupMotor = new Talon(pickupPort);
+		this.pickupMotor = new CANTalon(pickupPort);
 		this.xboxController = xboxController;
 		this.bottomLimit = new DigitalInput(bottomLimitPort);
 		this.topLimit = new DigitalInput(topLimitPort);
@@ -54,17 +54,33 @@ public class PickupController
 	 */
 	public void pickupPeriodic()
 	{
-		if (xboxController.getRawButton(1))
-		{
-			this.raisePickupMechanism();
-		}
+		this.pickupControl();
 	}
 	
+	/**
+	 * This controls the raising and lowering of the pickup motor.
+	 */
+	public void pickupControl()
+	{
+		if(xboxController.getRawButton(1))
+		{
+			pickupMotor.set(0.5);
+		} else {
+			pickupMotor.set(0);
+		}
+		
+		if(xboxController.getRawButton(2))
+		{
+			pickupMotor.set(-0.5);
+		} else {
+			pickupMotor.set(0);
+		}
+	}
 	
 	/**
 	 * Should raise the pickup mechanism.
 	 */
-	public void raisePickupMechanism()
+	/*public void raisePickupMechanism()
 	{
 		// Method needs more work, so far it raises when the button is pressed, 
 		// accelerates, stops when top limit is reached
@@ -90,12 +106,12 @@ public class PickupController
     			pickupMotor.set(0);
     		}
 		}
-	}
+	}*/
 	
 	/**
 	 * Should the lower the pickup mechanism.
 	 */
-	public void lowerPickupMechanism()
+	/*public void lowerPickupMechanism()
 	{
 		if (!pickupLowering)
 		{
@@ -118,5 +134,5 @@ public class PickupController
 				pickupMotor.set(0);
 			}
 		}
-	}
+	}*/
 }

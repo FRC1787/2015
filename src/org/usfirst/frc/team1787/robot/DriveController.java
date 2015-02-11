@@ -184,7 +184,7 @@ public class DriveController
     	moveValue = xboxController.getY() * DRIVE_SPEED;
     	rotateValue = xboxController.getX() * ROTATE_SPEED;
     	
-    	Utils.printPeriodic("Drive Before", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
+    	//Utils.printPeriodic("Drive Before", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
     	
     	/**
     	 * Determines the DriveState of the robot
@@ -246,7 +246,7 @@ public class DriveController
 	    	}
 	    	
 	    	// Uncomment following line to print move and rotate values to console
-	    	Utils.printPeriodic("Drive After", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
+	    	//Utils.printPeriodic("Drive After", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
 	    	
 	    	robotDrive.arcadeDrive(moveValue, rotateValue, true);
 	    	
