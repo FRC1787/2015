@@ -71,19 +71,19 @@ public class DriveController
 	public static final double MOTOR_MAX = 0.6;
 	
 	/**
-	 * The minimum speed that the motor moves at.
+	 * The minimum speed at which the motor moves
 	 */
 	public static final double MOTOR_MIN = 0.3;
 	
 	/**
 	 * The left motors.
 	 */
-    private final CANTalon leftMotors[];
+    private final CANTalon[] leftMotors;
     
     /**
      * The right motors.
      */
-    private final CANTalon rightMotors[];
+    private final CANTalon[] rightMotors;
     
     /**
      * The single instance of the Xbox controller
@@ -118,7 +118,13 @@ public class DriveController
      * @param rightPorts The right ports for the motors.
      * @param xboxController The Xbox controller instance.
      */
-    public DriveController(DriveMode driveMode, int[] leftMotorPorts, int[] rightMotorPorts, int[] leftEncoderPorts, int[] rightEncoderPorts, Joystick xboxController)
+    public DriveController(
+    		DriveMode driveMode, 
+    		int[] leftMotorPorts, 
+    		int[] rightMotorPorts, 
+    		int[] leftEncoderPorts, 
+    		int[] rightEncoderPorts, 
+    		Joystick xboxController)
     {
     	// Create instances of the left motor
     	leftMotors = new CANTalon[leftMotorPorts.length];
@@ -167,6 +173,9 @@ public class DriveController
     	double oldMoveValue = moveValue;
     	//double oldRotateValue = rotateValue;
     	
+    	moveValue = -xboxController.getY() * DRIVE_SPEED;
+    	rotateValue = xboxController.getX() * ROTATE_SPEED;
+    	
     	// Uncomment following line to print move and rotate values to console
     	Utils.printPeriodic("Drive", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
     	
@@ -191,20 +200,15 @@ public class DriveController
     	 */
     	if (driveMode == DriveMode.DRIVE_MODE_INCREMENTAL)
     	{
-    		//Why do we have this??
-    		moveValue = -xboxController.getY() * DRIVE_SPEED;
-        	rotateValue = xboxController.getX() * ROTATE_SPEED;
-    		
 	    	if (driveState == DriveState.FORWARD)
 	    	{
-	    		if(moveValue < MOTOR_MIN)
+	    		if (moveValue < MOTOR_MIN)
 	    		{
 	    			moveValue = MOTOR_MIN;
 	    		}
 	    		
 	    		if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
 	    		{	
-	    			// Increment the moveValue for gradual acceleration forward
 	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
 	    		}
 	    		// Uncomment the following to allow gradual deceleration
@@ -213,15 +217,16 @@ public class DriveController
 	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
 	    		}
 	    	}
-	    	
-	    	if (driveState == DriveState.BACKWARD)
+	    	else if (driveState == DriveState.BACKWARD)
 	    	{
 	    		
-	    		if(moveValue < MOTOR_MIN)
+	    		if (moveValue > -MOTOR_MIN)
+	    		{
+	    			moveValue = -MOTOR_MIN;
+	    		}
 	    		
 	    		if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > -MOTOR_MAX)
 	    		{
-	    			// Increment the moveValue for gradual acceleration backward
 	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
 	    		}
 	    		// Uncomment the following to allow gradual deceleration
@@ -230,19 +235,20 @@ public class DriveController
 	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
 	    		}
 	    	}
+	    	else if (driveState == DriveState.NOT_MOVING)
+	    	{
+	    		moveValue = 0;
+	    	}
 	    	
 	    	robotDrive.arcadeDrive(moveValue, rotateValue, true);
 	    	
+	    	// Do we really need this delay since this code is called 50x a second instead of in a while loop?
 	        Timer.delay(0.01);
     	}
     	
-    	if(driveMode == DriveMode.DRIVE_MODE_NORMAL)
+    	if (driveMode == DriveMode.DRIVE_MODE_NORMAL)
     	{
-    		moveValue = -xboxController.getY() * DRIVE_SPEED;
-        	rotateValue = xboxController.getX() * ROTATE_SPEED;
-        	
         	robotDrive.arcadeDrive(moveValue, rotateValue, true);
-        	
             Timer.delay(0.01);
     	}
 
