@@ -60,15 +60,14 @@ public class PickupController
 	
 	/**
 	 * This controls the raising and lowering of the pickup motor.
-	 * negative values makes pickup go up, positive makes it go down
 	 */
 	public void pickupControl()
 	{
-		if (xboxController.getRawButton(1) && bottomLimit.get()) // A-button lowers
+		if (xboxController.getRawButton(4) && bottomLimit.get()) // Y-button raises
 		{
 			pickupMotor.set(0.5);
 		}
-		else if (xboxController.getRawButton(4) && topLimit.get()) // Y-button raises
+		else if (xboxController.getRawButton(1) && topLimit.get()) // A-button lowers
 		{
 			pickupMotor.set(-0.5);
 		}
