@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 
 /**
  * Controls the robot in tele-operated mode.
- * @author jeremystark, ebencarek, Ryan Rule-Hoffman (sometimes)
+ * @author jeremystark, Eben Carek, Ryan Rule-Hoffman (sometimes)
  **/
 public class DriveController
 {

@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.*;
 
 /**
  * Controls the pickup controller.
- * @author Jeremy, Eban, & kind of ry60003333
+ * @author Jeremy, Eben Carek, & kind of ry60003333
  */
 public class PickupController 
 {

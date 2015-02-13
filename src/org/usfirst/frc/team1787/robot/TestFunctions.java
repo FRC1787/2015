@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Compressor;
 
 /**
  * Contains testing functions.
- * @author Eban, Jeremy, & ry60003333
+ * @author Eben, Jeremy, & ry60003333
  */
 public class TestFunctions 
 {

@@ -10,6 +10,11 @@ import org.usfirst.frc.team1787.robot.DriveController.DriveMode;
 
 import edu.wpi.first.wpilibj.*;
 
+/**
+ * The main robot class
+ * @author Eben Carek, Jeremy Stark, Ryan Rule-Hoffman (sometimes)
+ *
+ */
 public class Robot extends IterativeRobot 
 {
 	
