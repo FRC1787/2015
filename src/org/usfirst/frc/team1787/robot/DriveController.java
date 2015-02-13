@@ -160,7 +160,6 @@ public class DriveController
      */
     public void drivePeriodic() 
     {
-    	
     	if (driveMode == DriveMode.DRIVE_MODE_TEST_MOTORS)
     	{
     		testMotors();
