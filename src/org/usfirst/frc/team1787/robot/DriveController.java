@@ -224,8 +224,7 @@ public class DriveController
 	    		}
 	    	}
 	    	else if (driveState == DriveState.BACKWARD)
-	    	{
-	    		
+	    	{	
 	    		if (moveValue > -MOTOR_MIN)
 	    		{
 	    			moveValue = -MOTOR_MIN;
@@ -253,6 +252,9 @@ public class DriveController
 	    	// Do we really need this delay since this code is called 50x a second instead of in a while loop?
 	        Timer.delay(0.01);
     	}
+    	/**
+    	 * Normal DriveMode
+    	 */
     	else if (driveMode == DriveMode.DRIVE_MODE_NORMAL)
     	{
         	robotDrive.arcadeDrive(moveValue, rotateValue, true);
