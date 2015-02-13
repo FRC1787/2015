@@ -55,31 +55,47 @@ public class PickupController
 	public void pickupPeriodic()
 	{
 		this.pickupControl();
+		//this.pickupTest();
 	}
 	
 	/**
 	 * This controls the raising and lowering of the pickup motor.
+	 * negative values makes pickup go up, positive makes it go down
 	 */
 	public void pickupControl()
 	{
-		if (xboxController.getRawButton(1) && !topLimit.get())
+		if (xboxController.getRawButton(1) && bottomLimit.get()) // A-button lowers
 		{
 			pickupMotor.set(0.5);
-		} 
-		else 
-		{
-			pickupMotor.set(0);
 		}
-		
-		if (xboxController.getRawButton(2) && !bottomLimit.get())
+		else if (xboxController.getRawButton(4) && topLimit.get()) // Y-button raises
 		{
 			pickupMotor.set(-0.5);
-		} 
+		}
 		else 
 		{
 			pickupMotor.set(0);
 		}
 	}
+	/**
+	 * Prints state of each limit switch
+	 */
+	/*private void pickupTest()
+	{
+		if (!topLimit.get())
+		{
+			Utils.print("top limit active");
+		} else {
+			Utils.print("top limit not active");
+		}
+		
+		if (!bottomLimit.get())
+		{
+			Utils.print("bottom limit active");
+		} else {
+			Utils.print("bottom limit not active");
+		}
+	}*/
 	
 	/**
 	 * Should raise the pickup mechanism.

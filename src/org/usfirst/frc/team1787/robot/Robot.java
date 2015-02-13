@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot
 		// Initialize the XboxController.
 		xboxController = new Joystick(0);
 		
-		Utils.print("XboxController: " + xboxController);
+		//Utils.print("XboxController: " + xboxController);
 		
 		// Create the DriveController
 		driveController = new DriveController(
@@ -101,8 +101,7 @@ public class Robot extends IterativeRobot
     public void teleopPeriodic()
     {
     	driveController.drivePeriodic();
-    	//pickupController.pickupPeriodic();
-    	pickupController.pickupControl();
+    	pickupController.pickupPeriodic();
     }
     
     /**
