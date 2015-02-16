@@ -41,12 +41,19 @@ public class PickupController
 	 */
 	private boolean pickupLowering;
 	
+	/**
+	 * Flag variable for limit switch
+	 */
+	public boolean topLimitFlag, bottomLimitFlag;
+	
 	public PickupController(int pickupPort, int bottomLimitPort, int topLimitPort, Joystick xboxController)
 	{
 		this.pickupMotor = new CANTalon(pickupPort);
 		this.xboxController = xboxController;
 		this.bottomLimit = new DigitalInput(bottomLimitPort);
 		this.topLimit = new DigitalInput(topLimitPort);
+		this.bottomLimitFlag = false;
+		this.bottomLimitFlag = false;
 	}
 	
 	/**
@@ -63,13 +70,23 @@ public class PickupController
 	 */
 	public void pickupControl()
 	{
-		if (xboxController.getRawButton(4) && bottomLimit.get()) // Y-button raises
+		if(topLimit.get())
 		{
-			pickupMotor.set(0.5);
+			topLimitFlag = true;
+		} else if(bottomLimit.get())
+		{
+			bottomLimitFlag = true;
 		}
-		else if (xboxController.getRawButton(1) && topLimit.get()) // A-button lowers
+		
+		if (xboxController.getRawButton(4) && bottomLimit.get() && topLimitFlag) // Y-button raises
 		{
-			pickupMotor.set(-0.5);
+			pickupMotor.set(1);
+			bottomLimitFlag = false;
+		}
+		else if (xboxController.getRawButton(1) && topLimit.get() && bottomLimitFlag) // A-button lowers
+		{
+			pickupMotor.set(-0.75);
+			topLimitFlag = false;
 		}
 		else 
 		{
