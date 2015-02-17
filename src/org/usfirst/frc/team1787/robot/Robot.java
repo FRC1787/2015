@@ -73,7 +73,8 @@ public class Robot extends IterativeRobot
 				new int[] {6, 7},
 				new int[] {8, 9},
 				new int[] {13, 14},
-				new int[] {12, 11}
+				new int[] {12, 11},
+				xboxController
 				);
 		
 		// Create the PickupController
@@ -114,8 +115,7 @@ public class Robot extends IterativeRobot
 	 */
     public void autonomousPeriodic() 
     {
-    	// TODO: Replace me
-    	//driveController.tryDrive();
+    	autonomous.autonomousPeriodic();
     }
     
     /**
