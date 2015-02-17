@@ -64,7 +64,7 @@ public class Robot extends IterativeRobot
 				);
 		
 		// Create the PickupController
-		pickupController = new PickupController(15, 1, 0, xboxController);
+		pickupController = new PickupController(15, 0, 1, xboxController);
 		
 		// Create the Pneumatics
 		pneumatics = new Pneumatics();
