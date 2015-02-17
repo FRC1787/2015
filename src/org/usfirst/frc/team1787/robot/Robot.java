@@ -24,6 +24,11 @@ public class Robot extends IterativeRobot
 	private final DriveController driveController;
 	
 	/**
+	 * The autonomous controller
+	 */
+	private final Autonomous autonomous;
+	
+	/**
 	 * The pickup controller.
 	 */
 	private final PickupController pickupController;
@@ -63,6 +68,14 @@ public class Robot extends IterativeRobot
 				xboxController
 				);
 		
+		// Create Autonomous object
+		autonomous = new Autonomous(
+				new int[] {6, 7},
+				new int[] {8, 9},
+				new int[] {13, 14},
+				new int[] {12, 11}
+				);
+		
 		// Create the PickupController
 		pickupController = new PickupController(15, 0, 1, xboxController);
 		
@@ -91,6 +104,11 @@ public class Robot extends IterativeRobot
 		pneumatics.initPneumatics();
 	}
     
+	public void autonomousInit()
+	{
+		
+	}
+	
 	/**
 	 * Called 50 times a second when the robot is in autonomous mode.
 	 */
