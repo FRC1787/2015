@@ -29,22 +29,10 @@ public class PickupController
 	 */
 	private DigitalInput bottomLimit, topLimit;
 	
-	// We should change this to a state machine?
-	
 	/**
-	 * Set to true when the pickup is raising.
+	 * flag variables for limit switches
 	 */
-	private boolean pickupRaising;
-	
-	/**
-	 * Set to true when the pickup is lowering.
-	 */
-	private boolean pickupLowering;
-	
-	/**
-	 * Flag variable for limit switch
-	 */
-	public boolean topLimitFlag, bottomLimitFlag;
+	private boolean topLimitReached = false, bottomLimitReached = false;
 	
 	public PickupController(int pickupPort, int bottomLimitPort, int topLimitPort, Joystick xboxController)
 	{
@@ -52,8 +40,6 @@ public class PickupController
 		this.xboxController = xboxController;
 		this.bottomLimit = new DigitalInput(bottomLimitPort);
 		this.topLimit = new DigitalInput(topLimitPort);
-		this.bottomLimitFlag = false;
-		this.bottomLimitFlag = false;
 	}
 	
 	/**
@@ -70,23 +56,26 @@ public class PickupController
 	 */
 	public void pickupControl()
 	{
-		if(topLimit.get())
+		// set appropriate flag variable if a limit has been reached
+		if (!topLimit.get())
 		{
-			topLimitFlag = true;
-		} else if(bottomLimit.get())
+			topLimitReached = true;
+		}
+		else if (!bottomLimit.get())
 		{
-			bottomLimitFlag = true;
+			bottomLimitReached = true;
 		}
 		
-		if (xboxController.getRawButton(4) && bottomLimit.get() && topLimitFlag) // Y-button raises
+		// check if button is pressed, if no limit has been reached, and if the flags have not been set, then set motor
+		if (xboxController.getRawButton(4) && topLimit.get() && !topLimitReached) // Y-button raises
 		{
-			pickupMotor.set(1);
-			bottomLimitFlag = false;
+			pickupMotor.set(1.0);
+			bottomLimitReached = false;
 		}
-		else if (xboxController.getRawButton(1) && topLimit.get() && bottomLimitFlag) // A-button lowers
+		else if (xboxController.getRawButton(1) && bottomLimit.get() && !bottomLimitReached) // A-button lowers
 		{
 			pickupMotor.set(-0.75);
-			topLimitFlag = false;
+			topLimitReached = false;
 		}
 		else 
 		{
@@ -172,3 +161,4 @@ public class PickupController
 		}
 	}*/
 }
+
