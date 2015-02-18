@@ -75,7 +75,7 @@ public class Autonomous
 	}
 	
 	/**
-	 * Ensures that the robot drives forward using encoders.
+	 * Drive one foot as measured by the encoders.
 	 * @author ebencarek
 	 */
 	public void driveOneFoot()
@@ -103,9 +103,9 @@ public class Autonomous
 	}
 	
 	/**
-	 * Drives the robot forward using the encoders.
-	 * @param leftMotorsValue the assumed speed of the left motors influenced by the encoders.
-	 * @param rightMotorsValue the assumed speed of the right motors influenced by the encoders.
+	 * Set values for the left and right motors.
+	 * @param leftMotorsValue the assumed speed of the left motors.
+	 * @param rightMotorsValue the assumed speed of the right motors.
 	 */
 	private void driveMotors(double leftMotorsValue, double rightMotorsValue)
 	{	

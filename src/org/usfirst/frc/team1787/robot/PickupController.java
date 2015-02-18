@@ -7,13 +7,7 @@ import edu.wpi.first.wpilibj.*;
  * @author Jeremy, Eben Carek, & kind of ry60003333
  */
 public class PickupController 
-{
-	
-	/**
-	 * The pickup speed
-	 */
-	private static double pickupSpeed = 0;
-	
+{	
 	/**
 	 * The talon for the pickup motor.
 	 */
