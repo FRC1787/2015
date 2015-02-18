@@ -46,7 +46,6 @@ public class Pneumatics
 	public void initPneumatics()
 	{
 		compressor.clearAllPCMStickyFaults();
-		this.xboxController = xboxController;
 	}
 	
 	/**
@@ -57,6 +56,9 @@ public class Pneumatics
 		compressor.start();
 	}
 	
+	/**
+	 * Shifting controls for the robot.
+	 */
 	public void shiftingControls() 
     {
         //Shifting controls
@@ -76,7 +78,7 @@ public class Pneumatics
     } 
 	
 	/**
-	 * Test the solenoid.
+	 * Testing the solenoid.
 	 */
 	public void solenoidTest()
 	{

@@ -105,6 +105,9 @@ public class Robot extends IterativeRobot
 		pneumatics.initPneumatics();
 	}
     
+	/**
+	 * The autonomous init code.
+	 */
 	public void autonomousInit()
 	{
 		
@@ -137,7 +140,7 @@ public class Robot extends IterativeRobot
     }
     
     /**
-     * ????
+     * periodic testing method.
      */
     public void testPeriodic()
     {

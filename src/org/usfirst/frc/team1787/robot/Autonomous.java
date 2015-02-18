@@ -20,12 +20,22 @@ public class Autonomous
 	
 	private boolean active = false;
 	
-	public Autonomous(
+	/**
+	 * The default constructor for the Autonomous class
+	 * @param leftEncoderPorts int array containing the ports for the left encoder.
+	 * @param rightEncoderPorts int array containing the ports for the right encoder.
+	 * @param leftMotorPorts int array for the left motor ports.
+	 * @param rightMotorPorts int array for the right motor ports.
+	 * @param xboxController the xboxController object instance.
+	 */
+	public Autonomous
+		(
 			int[] leftEncoderPorts,
 			int[] rightEncoderPorts,
 			int[] leftMotorPorts,
 			int[] rightMotorPorts,
-			Joystick xboxController)
+			Joystick xboxController
+		)
 	{
 		this.leftEncoder = new Encoder(leftEncoderPorts[0], leftEncoderPorts[1], false, EncodingType.k4X);
     	this.rightEncoder = new Encoder(rightEncoderPorts[0], rightEncoderPorts[1], false, EncodingType.k4X);
@@ -51,6 +61,10 @@ public class Autonomous
     	this.xboxController = xboxController;
 	}
 	
+	/**
+	 * The periodic autonomous method for the robot that
+	 * will drive forward when active.
+	 */
 	public void autonomousPeriodic()
 	{
 		if (xboxController.getRawButton(1) && !active)
@@ -60,6 +74,10 @@ public class Autonomous
 		}
 	}
 	
+	/**
+	 * Ensures that the robot drives forward using encoders.
+	 * @author ebencarek
+	 */
 	public void driveOneFoot()
 	{
 		// resets the count of each encoder
@@ -84,6 +102,11 @@ public class Autonomous
 		}
 	}
 	
+	/**
+	 * Drives the robot forward using the encoders.
+	 * @param leftMotorsValue the assumed speed of the left motors influenced by the encoders.
+	 * @param rightMotorsValue the assumed speed of the right motors influenced by the encoders.
+	 */
 	private void driveMotors(double leftMotorsValue, double rightMotorsValue)
 	{	
 		// make sure drive values are between -1 and 1 inclusive

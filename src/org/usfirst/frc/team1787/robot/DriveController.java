@@ -48,6 +48,9 @@ public class DriveController
     	NOT_MOVING
     }
     
+    /**
+     * The current drive state that the robot is in.
+     */
     private DriveState driveState;
 	
 	/**

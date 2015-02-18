@@ -10,7 +10,7 @@ public class PickupController
 {
 	
 	/**
-	 * The pickup speed???
+	 * The pickup speed
 	 */
 	private static double pickupSpeed = 0;
 	
@@ -25,7 +25,7 @@ public class PickupController
 	private Joystick xboxController;
 	
 	/**
-	 * ????
+	 * The bottom and top limit switches.
 	 */
 	private DigitalInput bottomLimit, topLimit;
 	
@@ -34,6 +34,13 @@ public class PickupController
 	 */
 	private boolean topLimitReached = false, bottomLimitReached = false;
 	
+	/**
+	 * The main constructor for the PickupController.
+	 * @param pickupPort the port for the pickup motor.
+	 * @param bottomLimitPort the port for the bottom limit switch.
+	 * @param topLimitPort the port for the top limit switch.
+	 * @param xboxController the Joystick object for the xboxController.
+	 */
 	public PickupController(int pickupPort, int bottomLimitPort, int topLimitPort, Joystick xboxController)
 	{
 		this.pickupMotor = new CANTalon(pickupPort);
