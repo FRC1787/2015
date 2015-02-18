@@ -30,10 +30,10 @@ public class Autonomous
 	 */
 	public Autonomous
 		(
-			int[] leftEncoderPorts,
-			int[] rightEncoderPorts,
 			int[] leftMotorPorts,
 			int[] rightMotorPorts,
+			int[] leftEncoderPorts,
+			int[] rightEncoderPorts,
 			Joystick xboxController
 		)
 	{

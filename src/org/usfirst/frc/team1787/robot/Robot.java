@@ -21,17 +21,17 @@ public class Robot extends IterativeRobot
     /**
      * The drive controller.
      */
-	private final DriveController driveController;
+	private DriveController driveController = null;
 	
 	/**
 	 * The autonomous controller
 	 */
-	//private final Autonomous autonomous;
+	private Autonomous autonomous = null;
 	
 	/**
 	 * The pickup controller.
 	 */
-	private final PickupController pickupController;
+	private PickupController pickupController;
 	
 	/**
 	 * The pneumatics.
@@ -58,25 +58,6 @@ public class Robot extends IterativeRobot
 		
 		//Utils.print("XboxController: " + xboxController);
 		
-		// Create the DriveController
-		driveController = new DriveController(
-				DriveMode.DRIVE_MODE_INCREMENTAL,
-				new int[] {13, 14}, 
-				new int[] {12, 11},
-				new int[] {6, 7},
-				new int[] {8, 9},
-				xboxController
-				);
-		
-		// Create Autonomous object
-		/*autonomous = new Autonomous(
-				new int[] {6, 7},
-				new int[] {8, 9},
-				new int[] {13, 14},
-				new int[] {12, 11},
-				xboxController
-				);*/
-		
 		// Create the PickupController
 		pickupController = new PickupController(15, 0, 1, xboxController);
 		
@@ -85,6 +66,11 @@ public class Robot extends IterativeRobot
 		
 		// Create the PowerManager
 		powerManager = new PowerManager();
+		
+		/*
+		 * Moved the initialization of driveController and autonomous objects to teleopInit() and autonomousInit()
+		 * respectively to counter problems where both were being initiated in this constructor.
+		 */
     }
 	
 	/**
@@ -110,7 +96,14 @@ public class Robot extends IterativeRobot
 	 */
 	public void autonomousInit()
 	{
-		
+		// Create Autonomous object
+		autonomous = new Autonomous(
+				new int[] {13, 14},
+				new int[] {12, 11},
+				new int[] {6, 7},
+				new int[] {8, 9},
+				xboxController
+				);
 	}
 	
 	/**
@@ -119,6 +112,22 @@ public class Robot extends IterativeRobot
     public void autonomousPeriodic() 
     {
     	pneumatics.solenoidTest();
+    }
+    
+    /**
+     * called before teleop mode begins
+     */
+    public void teleopInit()
+    {
+		// Create the DriveController
+		driveController = new DriveController(
+				DriveMode.DRIVE_MODE_INCREMENTAL,
+				new int[] {13, 14}, 
+				new int[] {12, 11},
+				new int[] {6, 7},
+				new int[] {8, 9},
+				xboxController
+				);
     }
     
     /**
