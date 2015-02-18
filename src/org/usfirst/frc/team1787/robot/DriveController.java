@@ -58,7 +58,7 @@ public class DriveController
 	/**
 	 * The speed that the robot rotates at.
 	 */
-	public static final double ROTATE_SPEED = 0.3;
+	public static final double ROTATE_SPEED = 0.5;
 	
 	/**
 	 * The increment size for the motor speed. 
@@ -118,13 +118,15 @@ public class DriveController
      * @param rightPorts The right ports for the motors.
      * @param xboxController The Xbox controller instance.
      */
-    public DriveController(
+    public DriveController
+    	(
     		DriveMode driveMode, 
     		int[] leftMotorPorts, 
     		int[] rightMotorPorts, 
     		int[] leftEncoderPorts, 
     		int[] rightEncoderPorts, 
-    		Joystick xboxController)
+    		Joystick xboxController
+    	)
     {
     	// Create instances of the left motor
     	leftMotors = new CANTalon[leftMotorPorts.length];
@@ -278,25 +280,6 @@ public class DriveController
     		}
     	}*/
     }
-   
-    /**
-     * Xbox controller reference.
-     */
-    public void shiftingControls() 
-    {
-        //Shifting controls
-        /*if (xboxController.getRawButton(5))
-        {
-            gearShifter.set(DoubleSolenoid.Value.kForward);
-            shifterPosition = false;
-        }
-
-        else if (xboxController.getRawButton(6))
-        {
-            gearShifter.set(DoubleSolenoid.Value.kReverse);
-            shifterPosition = true;
-        }*/
-    }  
     
     /* All testing methods should be below here - for Organization*/
     

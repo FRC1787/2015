@@ -26,7 +26,7 @@ public class Robot extends IterativeRobot
 	/**
 	 * The autonomous controller
 	 */
-	private final Autonomous autonomous;
+	//private final Autonomous autonomous;
 	
 	/**
 	 * The pickup controller.
@@ -69,19 +69,19 @@ public class Robot extends IterativeRobot
 				);
 		
 		// Create Autonomous object
-		autonomous = new Autonomous(
+		/*autonomous = new Autonomous(
 				new int[] {6, 7},
 				new int[] {8, 9},
 				new int[] {13, 14},
 				new int[] {12, 11},
 				xboxController
-				);
+				);*/
 		
 		// Create the PickupController
 		pickupController = new PickupController(15, 0, 1, xboxController);
 		
 		// Create the Pneumatics
-		pneumatics = new Pneumatics();
+		pneumatics = new Pneumatics(1, xboxController);
 		
 		// Create the PowerManager
 		powerManager = new PowerManager();
@@ -115,7 +115,7 @@ public class Robot extends IterativeRobot
 	 */
     public void autonomousPeriodic() 
     {
-    	autonomous.autonomousPeriodic();
+    	pneumatics.solenoidTest();
     }
     
     /**
@@ -125,6 +125,7 @@ public class Robot extends IterativeRobot
     {
     	driveController.drivePeriodic();
     	pickupController.pickupPeriodic();
+    	pneumatics.shiftingControls();
     }
     
     /**

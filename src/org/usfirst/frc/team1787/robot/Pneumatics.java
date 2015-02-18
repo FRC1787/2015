@@ -15,26 +15,29 @@ public class Pneumatics
 	private final Compressor compressor;
 	
 	/**
-	 * The solenoid.
+	 * Pneumatics instance of the xboxController
 	 */
-	private final Solenoid solenoid;
+	private Joystick xboxController;
 	
-	/**
-	 * Creates a new instance of Pneumatics.
-	 */
-	public Pneumatics()
-	{
-		this(1);
-	}
-	
+	 /**
+     * The solenoid for the gear shifter.
+     */
+    private Solenoid gearShifter;
+    
+    /**
+     * The boolean showing the position of the shifter position.
+     */
+    private boolean shifterPosition;
+
 	/**
 	 * Creates a new instance of Pneumatics.
 	 * @param compressorPort The port that the compressor is attached too.
 	 */
-	public Pneumatics(int compressorPort)
+	public Pneumatics(int compressorPort, Joystick xboxController)
 	{
 		compressor = new Compressor(compressorPort);
-		solenoid = new Solenoid(0);
+		gearShifter = new Solenoid(0);
+		this.xboxController = xboxController;
 	}
 	
 	/**
@@ -43,6 +46,7 @@ public class Pneumatics
 	public void initPneumatics()
 	{
 		compressor.clearAllPCMStickyFaults();
+		this.xboxController = xboxController;
 	}
 	
 	/**
@@ -53,13 +57,33 @@ public class Pneumatics
 		compressor.start();
 	}
 	
+	public void shiftingControls() 
+    {
+        //Shifting controls
+        if (xboxController.getRawButton(5))
+        {
+            gearShifter.set(true);
+            shifterPosition = true;
+            Utils.print("Shifter set to " + shifterPosition);
+        }
+
+        else if (xboxController.getRawButton(6))
+        {
+        	gearShifter.set(false);
+            shifterPosition = false;
+            Utils.print("Shifter set to " + shifterPosition);
+        }
+    } 
+	
 	/**
 	 * Test the solenoid.
 	 */
 	public void solenoidTest()
 	{
-		solenoid.set(true);
+		gearShifter.set(true);
+		Utils.print("gear shifter set true");
 		Timer.delay(3);
-		solenoid.set(false);
+		gearShifter.set(false);
+		Utils.print("gear shifter set false");
 	}
 }
