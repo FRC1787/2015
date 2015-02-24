@@ -16,6 +16,12 @@ public class Autonomous
    
 	private final CANTalon[] rightMotors;
 	
+	private final CANTalon pickupMotor;
+	
+	private final DigitalInput bottomLimit = new DigitalInput(0), topLimit = new DigitalInput(1);
+	
+	private boolean bottomLimitReached = false, topLimitReached = false;
+	
 	private final Joystick xboxController;
 	
 	private boolean active = false;
@@ -30,6 +36,7 @@ public class Autonomous
 	 */
 	public Autonomous
 		(
+			int pickupMotorPort,
 			int[] leftMotorPorts,
 			int[] rightMotorPorts,
 			int[] leftEncoderPorts,
@@ -44,19 +51,22 @@ public class Autonomous
     	this.leftEncoder.setDistancePerPulse(2.5133);
     	this.rightEncoder.setDistancePerPulse(2.5133);
     	
-    	// Create instances of the left motor
+    	// Create instances of the left motors
     	leftMotors = new CANTalon[leftMotorPorts.length];
     	for (int i = 0; i < leftMotorPorts.length; i++)
     	{
     		leftMotors[i] = new CANTalon(leftMotorPorts[i]);
     	}
     	
-    	// Create instances of the right moors 
+    	// Create instances of the right motors 
     	rightMotors = new CANTalon[rightMotorPorts.length];
     	for (int i = 0; i < rightMotorPorts.length; i++)
     	{
     		rightMotors[i] = new CANTalon(rightMotorPorts[i]);
     	}
+    	
+    	// Create instances of the pickup motor
+    	this.pickupMotor = new CANTalon(pickupMotorPort);
     	
     	this.xboxController = xboxController;
 	}
@@ -67,7 +77,7 @@ public class Autonomous
 	 */
 	public void autonomousPeriodic()
 	{
-		if (xboxController.getRawButton(1) && !active)
+		if (!active)
 		{
 			driveOneFoot();
 			active = true;
@@ -100,6 +110,23 @@ public class Autonomous
 			
 			Timer.delay(0.1);
 		}
+	}
+	
+	public void pickupCan()
+	{
+		while (!topLimitReached && topLimit.get())
+		{
+			if (!topLimit.get())
+			{
+				topLimitReached = true;
+			}
+			
+			pickupMotor.set(1.0);
+			
+			Timer.delay(0.1);
+		}
+		
+		pickupMotor.set(0);
 	}
 	
 	/**

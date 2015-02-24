@@ -98,6 +98,7 @@ public class Robot extends IterativeRobot
 	{
 		// Create Autonomous object
 		autonomous = new Autonomous(
+				15,
 				new int[] {13, 14},
 				new int[] {12, 11},
 				new int[] {6, 7},
