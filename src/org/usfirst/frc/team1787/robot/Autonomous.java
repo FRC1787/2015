@@ -80,7 +80,7 @@ public class Autonomous
 	{
 		if (!active)
 		{
-			driveForDistanceInInches(12);
+			autonomousOptionOne();
 			active = true;
 		}
 	}
@@ -88,7 +88,7 @@ public class Autonomous
 	/**
 	 * Pick up can, drive forward, pick up tote, turn 90 degrees, drive to auto zone, set down tote and can
 	 */
-	public void autonomousOptionOne()
+	private void autonomousOptionOne()
 	{
 		pickupArmsRaise();
 		driveForDistanceInInches(18.0); // 1.5 feet
@@ -102,7 +102,7 @@ public class Autonomous
 	/**
 	 * Push tote and can forward into auto zone without picking either up
 	 */
-	public void autonomousOptionTwo()
+	private void autonomousOptionTwo()
 	{
 		// 10 feet, change when real distance is determined
 		driveForDistanceInInches(120.0);

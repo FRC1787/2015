@@ -113,6 +113,7 @@ public class Robot extends IterativeRobot
     public void autonomousPeriodic() 
     {
     	pneumatics.solenoidTest();
+    	autonomous.autonomousPeriodic();
     }
     
     /**
