@@ -73,8 +73,7 @@ public class Autonomous
 	}
 	
 	/**
-	 * The periodic autonomous method for the robot that
-	 * will drive forward when active.
+	 * The periodic autonomous method for the robot that performs to specified autonomous actions
 	 */
 	public void autonomousPeriodic()
 	{
@@ -100,12 +99,11 @@ public class Autonomous
 	}
 	
 	/**
-	 * Push tote and can forward into auto zone without picking either up
+	 * Push tote and can forward into auto zone without picking up either object
 	 */
 	private void autonomousOptionTwo()
 	{
-		// 10 feet, change when real distance is determined
-		driveForDistanceInInches(120.0);
+		driveForDistanceInInches(120.0); // 10 feet, change when real distance is determined
 	}
 	
 	/**
@@ -139,7 +137,7 @@ public class Autonomous
 	}
 	
 	/**
-	 * turn 90 degrees in either direction, based on direction passed in
+	 * Turn 90 degrees in either direction, based on direction passed in
 	 * @param direction true for right, false for left
 	 */
 	private void turn(boolean right)
@@ -168,6 +166,9 @@ public class Autonomous
 		driveMotors(0, 0);
 	}
 	
+	/**
+	 * Raise pickup arms
+	 */
 	private void pickupArmsRaise()
 	{
 		while (!topLimitReached && topLimit.get())
@@ -185,6 +186,9 @@ public class Autonomous
 		pickupMotor.set(0);
 	}
 	
+	/**
+	 * Raise pickup arms
+	 */
 	private void pickupArmsLower()
 	{
 		while (!bottomLimitReached && bottomLimit.get())
