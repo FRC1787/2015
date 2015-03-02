@@ -56,7 +56,7 @@ public class DriveController
 	/**
 	 * The speed at which to multiply input; must be between 0 and 1.
 	 */
-	public static final double DRIVE_SPEED = 0.5;
+	public static final double DRIVE_SPEED = 1.0;
 	
 	/**
 	 * The speed that the robot rotates at.
@@ -76,7 +76,7 @@ public class DriveController
 	/**
 	 * The minimum speed at which the motor moves
 	 */
-	public static final double MOTOR_MIN = 0.2;
+	public static final double MOTOR_MIN = 0.35;
 	
 	/**
 	 * The left motors.
@@ -116,10 +116,13 @@ public class DriveController
     private Encoder leftEncoder, rightEncoder;
    
     /**
-     * Creates a new DriveController.
-     * @param leftPorts The left ports for the motors.
-     * @param rightPorts The right ports for the motors.
-     * @param xboxController The Xbox controller instance.
+     * Constructor for the DriveController class
+     * @param driveMode the mode for driving the robot
+     * @param leftMotorPorts int array representing the left motor ports
+     * @param rightMotorPorts int array representing the right motor ports
+     * @param leftEncoderPorts int array representing the left encoder ports
+     * @param rightEncoderPorts int array representing the right encoder ports
+     * @param xboxController the shared instance of the xbox controller
      */
     public DriveController
     	(

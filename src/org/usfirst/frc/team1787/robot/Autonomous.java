@@ -27,12 +27,13 @@ public class Autonomous
 	private boolean active = false;
 	
 	/**
-	 * The default constructor for the Autonomous class
-	 * @param leftEncoderPorts int array containing the ports for the left encoder.
-	 * @param rightEncoderPorts int array containing the ports for the right encoder.
-	 * @param leftMotorPorts int array for the left motor ports.
-	 * @param rightMotorPorts int array for the right motor ports.
-	 * @param xboxController the xboxController object instance.
+	 * Constructor for the Autonomous class
+	 * @param pickupMotorPort port for the pickup motor
+	 * @param leftMotorPorts int array representing the ports of the left motors
+	 * @param rightMotorPorts int array representing the ports of the right motors
+	 * @param leftEncoderPorts int array representing the ports of the left encoders
+	 * @param rightEncoderPorts int array representing the ports of the right encoders
+	 * @param xboxController the shared instance of the xbox controller
 	 */
 	public Autonomous
 		(
@@ -79,16 +80,39 @@ public class Autonomous
 	{
 		if (!active)
 		{
-			driveOneFoot();
+			driveForDistanceInInches(12);
 			active = true;
 		}
 	}
 	
 	/**
-	 * Drive one foot as measured by the encoders.
-	 * @author ebencarek
+	 * Pick up can, drive forward, pick up tote, turn 90 degrees, drive to auto zone, set down tote and can
 	 */
-	public void driveOneFoot()
+	public void autonomousOptionOne()
+	{
+		pickupArmsRaise();
+		driveForDistanceInInches(18.0); // 1.5 feet
+		pickupArmsLower();
+		pickupArmsRaise();
+		turn(false); // turns left
+		driveForDistanceInInches(120.0); // 10 feet, change when real distance is determined
+		pickupArmsLower();
+	}
+	
+	/**
+	 * Push tote and can forward into auto zone without picking either up
+	 */
+	public void autonomousOptionTwo()
+	{
+		// 10 feet, change when real distance is determined
+		driveForDistanceInInches(120.0);
+	}
+	
+	/**
+	 * Drive a set number of inches as measured by the encoders
+	 * @param inches the distance in inches to be driven
+	 */
+	private void driveForDistanceInInches(double inches)
 	{
 		// resets the count of each encoder
 		for (Encoder e : encoders)
@@ -97,33 +121,82 @@ public class Autonomous
 		}
 		
 		// get initial distance of each encoder (should be 0)
-		double leftDistance = Math.max(leftEncoder.getDistance(), -leftEncoder.getDistance());
-		double rightDistance = Math.max(rightEncoder.getDistance(), -rightEncoder.getDistance());
+		double leftDistance = Math.abs(leftEncoder.getDistance());
+		double rightDistance = Math.abs(rightEncoder.getDistance());
 		
-		// while the distances are under 12 inches, drive the motors forward and update the distance values
-		while (leftDistance < 12 && rightDistance < 12)
+		// while the distances are under the given number of inches, drive the motors forward and update the distance values
+		while (leftDistance < inches && rightDistance < inches)
 		{
-			driveMotors(0.5, 0.5);
+			driveMotors(0.75, 0.75);
 			
-			leftDistance = Math.max(leftEncoder.getDistance(), -leftEncoder.getDistance());
-			rightDistance = Math.max(rightEncoder.getDistance(), -rightEncoder.getDistance());
+			leftDistance = Math.abs(leftEncoder.getDistance());
+			rightDistance = Math.abs(rightEncoder.getDistance());
 			
 			Timer.delay(0.1);
 		}
+		
+		driveMotors(0, 0);
 	}
 	
-	public void pickupCan()
+	/**
+	 * turn 90 degrees in either direction, based on direction passed in
+	 * @param direction true for right, false for left
+	 */
+	private void turn(boolean right)
+	{
+		for (Encoder e : encoders)
+		{
+			e.reset();
+		}
+		
+		double leftDistance = Math.abs(leftEncoder.getDistance());
+		double rightDistance = Math.abs(rightEncoder.getDistance());
+		
+		while (leftDistance < 18 && rightDistance < 18) // drive each side for 1.5 feet in opposite directions, needs testing
+		{
+			double rightMoveValue = right ? 0.5 : -0.5;
+			double leftMoveValue = -rightMoveValue;
+			
+			driveMotors(rightMoveValue, leftMoveValue);
+			
+			leftDistance = Math.abs(leftEncoder.getDistance());
+			rightDistance = Math.abs(leftEncoder.getDistance());
+			
+			Timer.delay(0.1);
+		}
+		
+		driveMotors(0, 0);
+	}
+	
+	private void pickupArmsRaise()
 	{
 		while (!topLimitReached && topLimit.get())
 		{
+			pickupMotor.set(1.0);
+			
+			Timer.delay(0.1);
+			
 			if (!topLimit.get())
 			{
 				topLimitReached = true;
 			}
-			
+		}
+		
+		pickupMotor.set(0);
+	}
+	
+	private void pickupArmsLower()
+	{
+		while (!bottomLimitReached && bottomLimit.get())
+		{	
 			pickupMotor.set(1.0);
 			
 			Timer.delay(0.1);
+			
+			if (!bottomLimit.get())
+			{
+				bottomLimitReached = true;
+			}
 		}
 		
 		pickupMotor.set(0);

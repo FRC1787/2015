@@ -75,7 +75,7 @@ public class PickupController
 		}
 		else if (xboxController.getRawButton(1) && bottomLimit.get() && !bottomLimitReached) // A-button lowers
 		{
-			pickupMotor.set(-0.75);
+			pickupMotor.set(-1.0);
 			topLimitReached = false;
 		}
 		else 
