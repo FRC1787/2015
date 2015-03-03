@@ -29,7 +29,7 @@ public class PickupController
 	private boolean topLimitReached = false, bottomLimitReached = false;
 	
 	/**
-	 * The main constructor for the PickupController.
+	 * Constructor for the PickupController class, takes port numbers
 	 * @param pickupPort the port for the pickup motor.
 	 * @param bottomLimitPort the port for the bottom limit switch.
 	 * @param topLimitPort the port for the top limit switch.
@@ -41,6 +41,21 @@ public class PickupController
 		this.xboxController = xboxController;
 		this.bottomLimit = new DigitalInput(bottomLimitPort);
 		this.topLimit = new DigitalInput(topLimitPort);
+	}
+	
+	/**
+	 * Takes objects, not port numbers.
+	 * @param pickupMotor
+	 * @param bottomLimit
+	 * @param topLimit
+	 * @param xboxController
+	 */
+	public PickupController(CANTalon pickupMotor, DigitalInput bottomLimit, DigitalInput topLimit, Joystick xboxController)
+	{
+		this.pickupMotor = pickupMotor;
+		this.bottomLimit = bottomLimit;
+		this.topLimit = topLimit;
+		this.xboxController = xboxController;
 	}
 	
 	/**

@@ -9,6 +9,7 @@ package org.usfirst.frc.team1787.robot;
 import org.usfirst.frc.team1787.robot.DriveController.DriveMode;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 
 /**
  * The main robot class
@@ -43,6 +44,14 @@ public class Robot extends IterativeRobot
 	 */
     private final Joystick xboxController;
     
+    private final CANTalon[] leftMotors, rightMotors;
+    
+    private final CANTalon pickupMotor;
+    
+    private Encoder leftEncoder, rightEncoder;
+    
+    private DigitalInput bottomLimit, topLimit;
+    
     /**
      * The manager of power.
      */
@@ -58,19 +67,51 @@ public class Robot extends IterativeRobot
 		
 		//Utils.print("XboxController: " + xboxController);
 		
-		// Create the PickupController
-		pickupController = new PickupController(15, 0, 1, xboxController);
-		
 		// Create the Pneumatics
 		pneumatics = new Pneumatics(1, xboxController);
 		
 		// Create the PowerManager
 		powerManager = new PowerManager();
 		
-		/*
-		 * Moved the initialization of driveController and autonomous objects to teleopInit() and autonomousInit()
-		 * respectively to counter problems where both were being initiated in this constructor.
-		 */
+		// Create all objects used for driving and other operations to be used by all controller classes
+		leftMotors = new CANTalon[2];
+		leftMotors[0] = new CANTalon(13);
+		leftMotors[1] = new CANTalon(14);
+		
+		rightMotors = new CANTalon[2];
+		rightMotors[0] = new CANTalon(12);
+		rightMotors[1] = new CANTalon(11);
+		
+		pickupMotor = new CANTalon(15);
+		
+		leftEncoder = new Encoder(6, 7, false, EncodingType.k4X);
+		rightEncoder = new Encoder(8, 9, false, EncodingType.k4X);
+		
+		bottomLimit = new DigitalInput(0);
+		topLimit = new DigitalInput(1);
+		
+		// Create the controllers
+		pickupController = new PickupController(pickupMotor, bottomLimit, topLimit, xboxController);
+		
+		driveController = new DriveController(
+				DriveMode.DRIVE_MODE_INCREMENTAL,
+				leftMotors,
+				rightMotors,
+				leftEncoder,
+				rightEncoder,
+				xboxController
+				);
+		
+		autonomous = new Autonomous(
+				pickupMotor,
+				leftMotors,
+				rightMotors,
+				leftEncoder,
+				rightEncoder,
+				bottomLimit,
+				topLimit,
+				xboxController
+				);
     }
 	
 	/**
@@ -97,14 +138,14 @@ public class Robot extends IterativeRobot
 	public void autonomousInit()
 	{
 		// Create Autonomous object
-		autonomous = new Autonomous(
+		/*autonomous = new Autonomous(
 				15,
 				new int[] {13, 14},
 				new int[] {12, 11},
 				new int[] {6, 7},
 				new int[] {8, 9},
 				xboxController
-				);
+				);*/
 	}
 	
 	/**
@@ -112,7 +153,7 @@ public class Robot extends IterativeRobot
 	 */
     public void autonomousPeriodic() 
     {
-    	pneumatics.solenoidTest();
+    	//pneumatics.solenoidTest();
     	autonomous.autonomousPeriodic();
     }
     
@@ -122,14 +163,14 @@ public class Robot extends IterativeRobot
     public void teleopInit()
     {
 		// Create the DriveController
-		driveController = new DriveController(
+		/*driveController = new DriveController(
 				DriveMode.DRIVE_MODE_INCREMENTAL,
 				new int[] {13, 14}, 
 				new int[] {12, 11},
 				new int[] {6, 7},
 				new int[] {8, 9},
 				xboxController
-				);
+				);*/
     }
     
     /**
@@ -139,7 +180,7 @@ public class Robot extends IterativeRobot
     {
     	driveController.drivePeriodic();
     	pickupController.pickupPeriodic();
-    	pneumatics.shiftingControls();
+    	//pneumatics.shiftingControls();
     }
     
     /**

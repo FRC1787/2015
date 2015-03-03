@@ -116,7 +116,7 @@ public class DriveController
     private Encoder leftEncoder, rightEncoder;
    
     /**
-     * Constructor for the DriveController class
+     * Constructor for the DriveController class, takes port numbers
      * @param driveMode the mode for driving the robot
      * @param leftMotorPorts int array representing the left motor ports
      * @param rightMotorPorts int array representing the right motor ports
@@ -124,15 +124,14 @@ public class DriveController
      * @param rightEncoderPorts int array representing the right encoder ports
      * @param xboxController the shared instance of the xbox controller
      */
-    public DriveController
-    	(
+    public DriveController(
     		DriveMode driveMode, 
     		int[] leftMotorPorts, 
     		int[] rightMotorPorts, 
     		int[] leftEncoderPorts, 
     		int[] rightEncoderPorts, 
     		Joystick xboxController
-    	)
+    		)
     {
     	// Create instances of the left motor
     	leftMotors = new CANTalon[leftMotorPorts.length];
@@ -160,6 +159,36 @@ public class DriveController
         // Set driveState and driveMode
         this.driveMode = driveMode;
         this.driveState = DriveState.NOT_MOVING;
+    }
+    
+    /**
+     * Takes references to objects, not port numbers
+     * @param driveMode
+     * @param leftMotors
+     * @param rightMotors
+     * @param leftEncoder
+     * @param rightEncoder
+     * @param xboxController
+     */
+    public DriveController(
+    		DriveMode driveMode,
+    		CANTalon[] leftMotors,
+    		CANTalon[] rightMotors,
+    		Encoder leftEncoder,
+    		Encoder rightEncoder,
+    		Joystick xboxController
+    		)
+    {
+    	this.driveMode = driveMode;
+    	this.leftMotors = leftMotors;
+    	this.rightMotors = rightMotors;
+    	this.leftEncoder = leftEncoder;
+    	this.rightEncoder = rightEncoder;
+    	this.xboxController = xboxController;
+    	
+    	robotDrive = new RobotDrive(this.leftMotors[0], this.leftMotors[1], this.rightMotors[0], this.rightMotors[1]);
+    	
+    	this.driveState = DriveState.NOT_MOVING;
     }
     
     
@@ -267,24 +296,6 @@ public class DriveController
         	robotDrive.arcadeDrive(moveValue, rotateValue, true);
             Timer.delay(0.01);
     	}
-
-    	// TODO: program motor correction based on encoders. Primitive version below
-    	
-    	/*double leftEncoderRate = leftEncoder.getRate();
-    	double rightEncoderRate = rightEncoder.getRate();
-    	
-    	if (leftEncoderRate != rightEncoderRate && rotateValue == 0 && driveState == DriveState.kForward)
-    	{
-    		// adjust motors to account for differences
-    		if (leftEncoderRate < rightEncoderRate)
-    		{
-    			rotateValue += 0.1;
-    		}
-    		else
-    		{
-    			rotateValue -= 0.1;
-    		}
-    	}*/
     }
     
     /* All testing methods should be below here - for Organization*/

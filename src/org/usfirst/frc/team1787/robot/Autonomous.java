@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 public class Autonomous 
 {
 	private Encoder leftEncoder, rightEncoder;
-	private Encoder[] encoders = {leftEncoder, rightEncoder};
+	private Encoder[] encoders;
 	
 	private final CANTalon[] leftMotors;
    
@@ -18,7 +18,7 @@ public class Autonomous
 	
 	private final CANTalon pickupMotor;
 	
-	private final DigitalInput bottomLimit = new DigitalInput(0), topLimit = new DigitalInput(1);
+	private DigitalInput bottomLimit, topLimit;
 	
 	private boolean bottomLimitReached = false, topLimitReached = false;
 	
@@ -27,7 +27,7 @@ public class Autonomous
 	private boolean active = false;
 	
 	/**
-	 * Constructor for the Autonomous class
+	 * Constructor for the Autonomous class, takes the port numbers instead of objects
 	 * @param pickupMotorPort port for the pickup motor
 	 * @param leftMotorPorts int array representing the ports of the left motors
 	 * @param rightMotorPorts int array representing the ports of the right motors
@@ -70,6 +70,44 @@ public class Autonomous
     	this.pickupMotor = new CANTalon(pickupMotorPort);
     	
     	this.xboxController = xboxController;
+    	
+    	bottomLimit = new DigitalInput(0);
+    	topLimit = new DigitalInput(1);
+	}
+	
+	/**
+	 * This constructor takes references to the actual objects used for driving instead
+	 * of the ports used for instantiating them.
+	 * @param pickupMotor
+	 * @param leftMotors
+	 * @param rightMotors
+	 * @param leftEncoder
+	 * @param rightEncoder
+	 * @param bottomLimit
+	 * @param topLimit
+	 * @param xboxController
+	 */
+	public Autonomous(
+			CANTalon pickupMotor,
+			CANTalon[] leftMotors,
+			CANTalon[] rightMotors,
+			Encoder leftEncoder,
+			Encoder rightEncoder,
+			DigitalInput bottomLimit,
+			DigitalInput topLimit,
+			Joystick xboxController
+			)
+	{
+		this.pickupMotor = pickupMotor;
+		this.leftMotors = leftMotors;
+		this.rightMotors = rightMotors;
+		this.leftEncoder = leftEncoder;
+		this.rightEncoder = rightEncoder;
+		this.xboxController = xboxController;
+		this.bottomLimit = bottomLimit;
+		this.topLimit = topLimit;
+		
+		encoders = new Encoder[] {this.leftEncoder, this.rightEncoder};
 	}
 	
 	/**
@@ -93,7 +131,7 @@ public class Autonomous
 		driveForDistanceInInches(18.0); // 1.5 feet
 		pickupArmsLower();
 		pickupArmsRaise();
-		turn(false); // turns left
+		turnWithEncoders(false); // turns left
 		driveForDistanceInInches(120.0); // 10 feet, change when real distance is determined
 		pickupArmsLower();
 	}
@@ -136,11 +174,18 @@ public class Autonomous
 		driveMotors(0, 0);
 	}
 	
+	private void driveForTimeInSeconds(double seconds)
+	{
+		driveMotors(0.7, 0.7);
+		Timer.delay(seconds);
+		driveMotors(0, 0);
+	}
+	
 	/**
 	 * Turn 90 degrees in either direction, based on direction passed in
 	 * @param direction true for right, false for left
 	 */
-	private void turn(boolean right)
+	private void turnWithEncoders(boolean right)
 	{
 		for (Encoder e : encoders)
 		{
@@ -163,6 +208,16 @@ public class Autonomous
 			Timer.delay(0.1);
 		}
 		
+		driveMotors(0, 0);
+	}
+	
+	private void turnWithTimerDelay(boolean right)
+	{
+		double rightMoveValue = right ? 0.5 : -0.5;
+		double leftMoveValue = -rightMoveValue;
+		
+		driveMotors(rightMoveValue, leftMoveValue);
+		Timer.delay(3);
 		driveMotors(0, 0);
 	}
 	
@@ -214,18 +269,18 @@ public class Autonomous
 	private void driveMotors(double leftMotorsValue, double rightMotorsValue)
 	{	
 		// make sure drive values are between -1 and 1 inclusive
-		leftMotorsValue = leftMotorsValue > 0 ? Math.min(leftMotorsValue, 1) : Math.max(leftMotorsValue, -1);
-		rightMotorsValue = rightMotorsValue > 0 ? Math.min(rightMotorsValue, 1) : Math.max(rightMotorsValue, -1);
+		double leftValue = leftMotorsValue > 0 ? Math.min(leftMotorsValue, 1) : Math.max(leftMotorsValue, -1);
+		double rightValue = rightMotorsValue > 0 ? Math.min(rightMotorsValue, 1) : Math.max(rightMotorsValue, -1);
 		
 		// set each motor
 		for (CANTalon t : leftMotors)
 		{
-			t.set(leftMotorsValue);
+			t.set(leftValue);
 		}
 		
 		for (CANTalon t : rightMotors)
 		{
-			t.set(rightMotorsValue);
+			t.set(rightValue);
 		}
 	}
 }
