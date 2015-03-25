@@ -238,6 +238,8 @@ public class Autonomous
 			}
 		}
 		
+		bottomLimitReached = false;
+		
 		pickupMotor.set(0);
 	}
 	
@@ -257,6 +259,8 @@ public class Autonomous
 				bottomLimitReached = true;
 			}
 		}
+		
+		topLimitReached = false;
 		
 		pickupMotor.set(0);
 	}

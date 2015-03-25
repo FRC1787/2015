@@ -26,7 +26,7 @@ public class PickupController
 	/**
 	 * flag variables for limit switches
 	 */
-	private boolean topLimitReached = false, bottomLimitReached = false;
+	private boolean topLimitReached = false, bottomLimitReached = false, automaticActive = false;
 	
 	/**
 	 * Constructor for the PickupController class, takes port numbers
@@ -63,12 +63,15 @@ public class PickupController
 	 */
 	public void pickupPeriodic()
 	{
-		this.pickupControl();
+		if (!automaticActive) 
+		{
+			this.pickupControl();
+		}
 		//this.pickupTest();
 	}
 	
 	/**
-	 * This controls the raising and lowering of the pickup motor.
+	 * This controls the manual raising and lowering of the pickup motor.
 	 */
 	public void pickupControl()
 	{
@@ -81,6 +84,8 @@ public class PickupController
 		{
 			bottomLimitReached = true;
 		}
+		
+		this.pickupAutomatic();
 		
 		// check if button is pressed, if no limit has been reached, and if the flags have not been set, then set motor
 		if (xboxController.getRawButton(4) && topLimit.get() && !topLimitReached) // Y-button raises
@@ -98,6 +103,63 @@ public class PickupController
 			pickupMotor.set(0);
 		}
 	}
+	
+	/**
+	 * For automatically lowering and then raising the pickup arms
+	 */
+	public void pickupAutomatic()
+	{	
+		if (xboxController.getZ() != 0) // If right trigger has been pressed
+		{
+			automaticActive = true;
+		}
+		else
+		{
+			return;
+		}
+		
+		if (automaticActive)
+		{
+			// Lower
+			while (!bottomLimitReached && bottomLimit.get())
+			{	
+				pickupMotor.set(1.0);
+				
+				Timer.delay(0.1);
+				
+				if (!bottomLimit.get())
+				{
+					bottomLimitReached = true;
+				}
+			}
+			
+			topLimitReached = false;
+			
+			pickupMotor.set(0);
+			
+			Timer.delay(0.3);
+			
+			// Raise
+			while (!topLimitReached && topLimit.get())
+			{
+				pickupMotor.set(1.0);
+				
+				Timer.delay(0.1);
+				
+				if (!topLimit.get())
+				{
+					topLimitReached = true;
+				}
+			}
+			
+			bottomLimitReached = false;
+			
+			pickupMotor.set(0);
+		}
+		
+		automaticActive = false;
+	}
+	
 	/**
 	 * Prints state of each limit switch
 	 */
