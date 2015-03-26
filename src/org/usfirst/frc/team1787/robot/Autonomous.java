@@ -117,7 +117,7 @@ public class Autonomous
 	{
 		if (!active)
 		{
-			autonomousOptionOne();
+			autonomousOptionOneWithTimer();
 			active = true;
 		}
 	}
@@ -142,6 +142,20 @@ public class Autonomous
 	private void autonomousOptionTwo()
 	{
 		driveForDistanceInInches(120.0); // 10 feet, change when real distance is determined
+	}
+	
+	/**
+	 * Same as autonomousOptionOne() but uses timer delays instead of encoders
+	 */
+	private void autonomousOptionOneWithTimer()
+	{
+		pickupArmsRaise();
+		driveForTimeInSeconds(3);
+		pickupArmsLower();
+		pickupArmsRaise();
+		turnWithTimerDelay(false);
+		driveForTimeInSeconds(6);
+		pickupArmsLower();
 	}
 	
 	/**
