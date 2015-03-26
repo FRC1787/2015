@@ -137,10 +137,8 @@ public class Autonomous
 	 */
 	private void setPickupMotors(double speed)
 	{
-		for (CANTalon next : pickupMotors)
-		{
-			next.set(speed);
-		}
+		pickupMotors[0].set(speed);
+		pickupMotors[1].set(-speed);
 	}
 	
 	/**
