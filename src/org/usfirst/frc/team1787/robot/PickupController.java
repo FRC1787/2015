@@ -11,7 +11,7 @@ public class PickupController
 	/**
 	 * The talon for the pickup motor.
 	 */
-	private CANTalon pickupMotor;
+	private CANTalon[] pickupMotors;
 	
 	/**
 	 * The Xbox controller instance.
@@ -35,27 +35,39 @@ public class PickupController
 	 * @param topLimitPort the port for the top limit switch.
 	 * @param xboxController the Joystick object for the xboxController.
 	 */
-	public PickupController(int pickupPort, int bottomLimitPort, int topLimitPort, Joystick xboxController)
+	/*public PickupController(int pickupPort, int bottomLimitPort, int topLimitPort, Joystick xboxController)
 	{
 		this.pickupMotor = new CANTalon(pickupPort);
 		this.xboxController = xboxController;
 		this.bottomLimit = new DigitalInput(bottomLimitPort);
 		this.topLimit = new DigitalInput(topLimitPort);
-	}
+	}*/
 	
 	/**
 	 * Takes objects, not port numbers.
-	 * @param pickupMotor
+	 * @param pickupMotors The pickup motors.
 	 * @param bottomLimit
 	 * @param topLimit
 	 * @param xboxController
 	 */
-	public PickupController(CANTalon pickupMotor, DigitalInput bottomLimit, DigitalInput topLimit, Joystick xboxController)
+	public PickupController(CANTalon[] pickupMotors, DigitalInput bottomLimit, DigitalInput topLimit, Joystick xboxController)
 	{
-		this.pickupMotor = pickupMotor;
+		this.pickupMotors = pickupMotors;
 		this.bottomLimit = bottomLimit;
 		this.topLimit = topLimit;
 		this.xboxController = xboxController;
+	}
+	
+	/**
+	 * Set the motor speeds.
+	 * @param speed The speed.
+	 */
+	private void setMotors(double speed)
+	{
+		for (CANTalon next : pickupMotors)
+		{
+			next.set(speed);
+		}
 	}
 	
 	/**
@@ -90,17 +102,18 @@ public class PickupController
 		// check if button is pressed, if no limit has been reached, and if the flags have not been set, then set motor
 		if (xboxController.getRawButton(4) && topLimit.get() && !topLimitReached) // Y-button raises
 		{
-			pickupMotor.set(1.0);
+			
+			setMotors(1.0);
 			bottomLimitReached = false;
 		}
 		else if (xboxController.getRawButton(1) && bottomLimit.get() && !bottomLimitReached) // A-button lowers
 		{
-			pickupMotor.set(-1.0);
+			setMotors(-1.0);
 			topLimitReached = false;
 		}
 		else 
 		{
-			pickupMotor.set(0);
+			setMotors(0);
 		}
 	}
 	
@@ -123,7 +136,7 @@ public class PickupController
 			// Lower
 			while (!bottomLimitReached && bottomLimit.get())
 			{	
-				pickupMotor.set(1.0);
+				setMotors(1.0);
 				
 				Timer.delay(0.1);
 				
@@ -135,14 +148,14 @@ public class PickupController
 			
 			topLimitReached = false;
 			
-			pickupMotor.set(0);
+			setMotors(0);
 			
 			Timer.delay(0.3);
 			
 			// Raise
 			while (!topLimitReached && topLimit.get())
 			{
-				pickupMotor.set(1.0);
+				setMotors(1.0);
 				
 				Timer.delay(0.1);
 				
@@ -154,7 +167,7 @@ public class PickupController
 			
 			bottomLimitReached = false;
 			
-			pickupMotor.set(0);
+			setMotors(0);
 		}
 		
 		automaticActive = false;

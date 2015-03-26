@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot
     
     private final CANTalon[] leftMotors, rightMotors;
     
-    private final CANTalon pickupMotor;
+    private final CANTalon[] pickupMotors;
     
     private Encoder leftEncoder, rightEncoder;
     
@@ -82,7 +82,7 @@ public class Robot extends IterativeRobot
 		rightMotors[0] = new CANTalon(12);
 		rightMotors[1] = new CANTalon(11);
 		
-		pickupMotor = new CANTalon(15);
+		pickupMotors = new CANTalon[] {new CANTalon(15), new CANTalon(16)};
 		
 		leftEncoder = new Encoder(6, 7, false, EncodingType.k4X);
 		rightEncoder = new Encoder(8, 9, false, EncodingType.k4X);
@@ -91,7 +91,7 @@ public class Robot extends IterativeRobot
 		topLimit = new DigitalInput(1);
 		
 		// Create the controllers
-		pickupController = new PickupController(pickupMotor, bottomLimit, topLimit, xboxController);
+		pickupController = new PickupController(pickupMotors, bottomLimit, topLimit, xboxController);
 		
 		driveController = new DriveController(
 				DriveMode.DRIVE_MODE_INCREMENTAL,
@@ -103,7 +103,7 @@ public class Robot extends IterativeRobot
 				);
 		
 		autonomous = new Autonomous(
-				pickupMotor,
+				pickupMotors,
 				leftMotors,
 				rightMotors,
 				leftEncoder,

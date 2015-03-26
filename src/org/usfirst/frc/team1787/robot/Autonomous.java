@@ -16,7 +16,7 @@ public class Autonomous
    
 	private final CANTalon[] rightMotors;
 	
-	private final CANTalon pickupMotor;
+	private final CANTalon[] pickupMotors;
 	
 	private DigitalInput bottomLimit, topLimit;
 	
@@ -35,7 +35,7 @@ public class Autonomous
 	 * @param rightEncoderPorts int array representing the ports of the right encoders
 	 * @param xboxController the shared instance of the xbox controller
 	 */
-	public Autonomous
+	/*public Autonomous
 		(
 			int pickupMotorPort,
 			int[] leftMotorPorts,
@@ -73,7 +73,7 @@ public class Autonomous
     	
     	bottomLimit = new DigitalInput(0);
     	topLimit = new DigitalInput(1);
-	}
+	}*/
 	
 	/**
 	 * This constructor takes references to the actual objects used for driving instead
@@ -88,7 +88,7 @@ public class Autonomous
 	 * @param xboxController
 	 */
 	public Autonomous(
-			CANTalon pickupMotor,
+			CANTalon[] pickupMotors,
 			CANTalon[] leftMotors,
 			CANTalon[] rightMotors,
 			Encoder leftEncoder,
@@ -98,7 +98,7 @@ public class Autonomous
 			Joystick xboxController
 			)
 	{
-		this.pickupMotor = pickupMotor;
+		this.pickupMotors = pickupMotors;
 		this.leftMotors = leftMotors;
 		this.rightMotors = rightMotors;
 		this.leftEncoder = leftEncoder;
@@ -108,6 +108,18 @@ public class Autonomous
 		this.topLimit = topLimit;
 		
 		encoders = new Encoder[] {this.leftEncoder, this.rightEncoder};
+	}
+	
+	/**
+	 * Set the pickup motor speeds.
+	 * @param speed The speed.
+	 */
+	private void setPickupMotors(double speed)
+	{
+		for (CANTalon next : pickupMotors)
+		{
+			next.set(speed);
+		}
 	}
 	
 	/**
@@ -242,7 +254,7 @@ public class Autonomous
 	{
 		while (!topLimitReached && topLimit.get())
 		{
-			pickupMotor.set(1.0);
+			setPickupMotors(1.0);
 			
 			Timer.delay(0.1);
 			
@@ -254,7 +266,7 @@ public class Autonomous
 		
 		bottomLimitReached = false;
 		
-		pickupMotor.set(0);
+		setPickupMotors(0);
 	}
 	
 	/**
@@ -264,7 +276,7 @@ public class Autonomous
 	{
 		while (!bottomLimitReached && bottomLimit.get())
 		{	
-			pickupMotor.set(1.0);
+			setPickupMotors(1.0);
 			
 			Timer.delay(0.1);
 			
@@ -276,7 +288,7 @@ public class Autonomous
 		
 		topLimitReached = false;
 		
-		pickupMotor.set(0);
+		setPickupMotors(0);
 	}
 	
 	/**
