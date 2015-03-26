@@ -113,7 +113,8 @@ public class DriveController
     /**
      * The encoders measuring the rotation of the motors
      */
-    private Encoder leftEncoder, rightEncoder;
+    @SuppressWarnings("unused")
+	private Encoder leftEncoder, rightEncoder;
    
     /**
      * Constructor for the DriveController class, takes port numbers

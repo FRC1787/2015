@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1787.robot;
 
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 
 /**
  * Controls the Robot in autonomous mode.
@@ -9,21 +8,44 @@ import edu.wpi.first.wpilibj.CounterBase.EncodingType;
  **/
 public class Autonomous 
 {
+	/**
+	 * The left and right encoders.
+	 */
 	private Encoder leftEncoder, rightEncoder;
+	
+	/**
+	 * The array of both the left and right encoders.
+	 */
 	private Encoder[] encoders;
 	
+	/**
+	 * The array of left motors.
+	 */
 	private final CANTalon[] leftMotors;
    
+	/**
+	 * The array of right motors.
+	 */
 	private final CANTalon[] rightMotors;
 	
+	/**
+	 * The array of pickup motors.
+	 */
 	private final CANTalon[] pickupMotors;
 	
+	/**
+	 * The inputs for when the mechanism has reached its lower and upper limit.
+	 */
 	private DigitalInput bottomLimit, topLimit;
 	
+	/**
+	 * Boolean values for when the mechanism has reached its lower and upper limit.
+	 */
 	private boolean bottomLimitReached = false, topLimitReached = false;
 	
-	private final Joystick xboxController;
-	
+	/**
+	 * Is anonymous mode active.
+	 */
 	private boolean active = false;
 	
 	/**
@@ -103,7 +125,6 @@ public class Autonomous
 		this.rightMotors = rightMotors;
 		this.leftEncoder = leftEncoder;
 		this.rightEncoder = rightEncoder;
-		this.xboxController = xboxController;
 		this.bottomLimit = bottomLimit;
 		this.topLimit = topLimit;
 		
@@ -137,6 +158,7 @@ public class Autonomous
 	/**
 	 * Pick up can, drive forward, pick up tote, turn 90 degrees, drive to auto zone, set down tote and can
 	 */
+	@SuppressWarnings("unused")
 	private void autonomousOptionOne()
 	{
 		pickupArmsRaise();
@@ -151,6 +173,7 @@ public class Autonomous
 	/**
 	 * Push tote and can forward into auto zone without picking up either object
 	 */
+	@SuppressWarnings("unused")
 	private void autonomousOptionTwo()
 	{
 		driveForDistanceInInches(120.0); // 10 feet, change when real distance is determined

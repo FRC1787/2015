@@ -44,12 +44,24 @@ public class Robot extends IterativeRobot
 	 */
     private final Joystick xboxController;
     
+    /**
+     * The arrays for the left and right motors.
+     */
     private final CANTalon[] leftMotors, rightMotors;
     
+    /**
+     * The array of the pickup motor.
+     */
     private final CANTalon[] pickupMotors;
     
+    /**
+     * The left and right encoders.
+     */
     private Encoder leftEncoder, rightEncoder;
     
+    /**
+     * The inputs that signal when the mechanism has reached its uppera and lower limit.
+     */
     private DigitalInput bottomLimit, topLimit;
     
     /**

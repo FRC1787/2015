@@ -13,14 +13,14 @@ public class Utils
 	/**
 	 * The map of IDs to timestamps.
 	 */
-	private static HashMap timestamps;
+	private static HashMap<String, Long> timestamps;
 	
 	/**
 	 * Static initializers.
 	 */
 	static
 	{
-		timestamps = new HashMap();
+		timestamps = new HashMap<String, Long>();
 	}
 	
 	/**
