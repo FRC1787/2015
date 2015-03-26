@@ -138,7 +138,7 @@ public class Autonomous
 	private void setPickupMotors(double speed)
 	{
 		pickupMotors[0].set(speed);
-		pickupMotors[1].set(-speed);
+		pickupMotors[1].set(speed);
 	}
 	
 	/**
@@ -183,11 +183,11 @@ public class Autonomous
 	private void autonomousOptionOneWithTimer()
 	{
 		pickupArmsRaise();
-		driveForTimeInSeconds(3);
+		driveForTimeInSeconds(1.5);
 		pickupArmsLower();
 		pickupArmsRaise();
 		turnWithTimerDelay(false);
-		driveForTimeInSeconds(6);
+		driveForTimeInSeconds(3);
 		pickupArmsLower();
 	}
 	
@@ -264,7 +264,7 @@ public class Autonomous
 		double leftMoveValue = -rightMoveValue;
 		
 		driveMotors(rightMoveValue, leftMoveValue);
-		Timer.delay(3);
+		Timer.delay(1.5);
 		driveMotors(0, 0);
 	}
 	
@@ -297,7 +297,7 @@ public class Autonomous
 	{
 		while (!bottomLimitReached && bottomLimit.get())
 		{	
-			setPickupMotors(1.0);
+			setPickupMotors(-1.0);
 			
 			Timer.delay(0.1);
 			
@@ -320,8 +320,8 @@ public class Autonomous
 	private void driveMotors(double leftMotorsValue, double rightMotorsValue)
 	{	
 		// make sure drive values are between -1 and 1 inclusive
-		double leftValue = leftMotorsValue > 0 ? Math.min(leftMotorsValue, 1) : Math.max(leftMotorsValue, -1);
-		double rightValue = rightMotorsValue > 0 ? Math.min(rightMotorsValue, 1) : Math.max(rightMotorsValue, -1);
+		double leftValue = leftMotorsValue;//leftMotorsValue > 0 ? Math.min(leftMotorsValue, 1) : Math.max(leftMotorsValue, -1);
+		double rightValue = rightMotorsValue;//rightMotorsValue > 0 ? Math.min(rightMotorsValue, 1) : Math.max(rightMotorsValue, -1);
 		
 		// set each motor
 		for (CANTalon t : leftMotors)

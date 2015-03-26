@@ -106,7 +106,7 @@ public class Robot extends IterativeRobot
 		pickupController = new PickupController(pickupMotors, bottomLimit, topLimit, xboxController);
 		
 		driveController = new DriveController(
-				DriveMode.DRIVE_MODE_INCREMENTAL,
+				DriveMode.DRIVE_MODE_NORMAL,
 				leftMotors,
 				rightMotors,
 				leftEncoder,

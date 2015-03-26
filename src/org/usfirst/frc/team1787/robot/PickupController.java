@@ -28,6 +28,8 @@ public class PickupController
 	 */
 	private boolean topLimitReached = false, bottomLimitReached = false, automaticActive = false;
 	
+	private boolean emergencyStop = false;
+	
 	/**
 	 * Constructor for the PickupController class, takes port numbers
 	 * @param pickupPort the port for the pickup motor.
@@ -65,7 +67,7 @@ public class PickupController
 	private void setMotors(double speed)
 	{
 		pickupMotors[0].set(speed);
-		pickupMotors[1].set(-speed);
+		pickupMotors[1].set(speed);
 	}
 	
 	/**
@@ -85,6 +87,14 @@ public class PickupController
 	 */
 	public void pickupControl()
 	{
+		this.checkEmergencyStop();
+		
+		if (emergencyStop)
+		{
+			setMotors(0);
+			return;
+		}
+		
 		// set appropriate flag variable if a limit has been reached
 		if (!topLimit.get())
 		{
@@ -115,6 +125,18 @@ public class PickupController
 		}
 	}
 	
+	public void checkEmergencyStop()
+	{
+		if (xboxController.getRawButton(8))
+		{
+			emergencyStop = true;
+		}
+		else if (xboxController.getRawButton(7))
+		{
+			emergencyStop = false;
+		}
+	}
+	
 	/**
 	 * For automatically lowering and then raising the pickup arms
 	 */
@@ -134,7 +156,7 @@ public class PickupController
 			// Lower
 			while (!bottomLimitReached && bottomLimit.get())
 			{	
-				setMotors(1.0);
+				setMotors(-1.0);
 				
 				Timer.delay(0.1);
 				
@@ -174,22 +196,34 @@ public class PickupController
 	/**
 	 * Prints state of each limit switch
 	 */
-	/*private void pickupTest()
+	private void pickupTest()
 	{
-		if (!topLimit.get())
+		if (xboxController.getRawButton(4))
 		{
-			Utils.print("top limit active");
-		} else {
-			Utils.print("top limit not active");
+			pickupMotors[0].set(0.4);
 		}
 		
-		if (!bottomLimit.get())
+		else if (xboxController.getRawButton(1))
 		{
-			Utils.print("bottom limit active");
-		} else {
-			Utils.print("bottom limit not active");
+			pickupMotors[0].set(-0.4);
 		}
-	}*/
+		
+		else if (xboxController.getRawButton(2))
+		{
+			pickupMotors[1].set(0.4);
+		}
+		
+		else if (xboxController.getRawButton(3))
+		{
+			pickupMotors[1].set(-0.4);
+		}
+		
+		else
+		{
+			pickupMotors[1].set(0);
+			pickupMotors[0].set(0);
+		}
+	}
 	
 	/**
 	 * Should raise the pickup mechanism.

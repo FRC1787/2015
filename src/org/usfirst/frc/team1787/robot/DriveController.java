@@ -294,7 +294,9 @@ public class DriveController
     	 */
     	else if (driveMode == DriveMode.DRIVE_MODE_NORMAL)
     	{
-        	robotDrive.arcadeDrive(moveValue, rotateValue, true);
+        	double adjustedMoveValue = 0.7 * moveValue;
+    		
+    		robotDrive.arcadeDrive(adjustedMoveValue, rotateValue, true);
             Timer.delay(0.01);
     	}
     }
