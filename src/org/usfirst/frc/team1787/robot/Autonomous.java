@@ -182,12 +182,12 @@ public class Autonomous
 	private void autonomousOptionOneWithTimer()
 	{
 		pickupArmsRaise();
-		//driveForTimeInSeconds(2);
-		//pickupArmsLower();
-		//pickupArmsRaise();
-		//turnWithTimerDelay(false);
-		//driveForTimeInSeconds(6);
-		//pickupArmsLower();
+		driveForTimeInSeconds(2);
+		pickupArmsLower();
+		pickupArmsRaise();
+		turnWithTimerDelay(false);
+		driveForTimeInSeconds(6);
+		pickupArmsLower();
 	}
 	
 	/**
@@ -205,9 +205,9 @@ public class Autonomous
 	 */
 	private void driveForTimeInSeconds(double seconds)
 	{
-		driveMotors(0.7, 0.7);
+		driveMotorsWithMoveAndRotateValue(0.7, 0);
 		Timer.delay(seconds);
-		driveMotors(0, 0);
+		driveMotorsWithMoveAndRotateValue(0, 0);
 	}
 	
 	/**
@@ -216,72 +216,19 @@ public class Autonomous
 	 */
 	private void turnWithTimerDelay(boolean right)
 	{
-		double rightMoveValue = right ? 0.5 : 0.1;
+		/*double rightMoveValue = right ? 0.5 : 0.1;
 		double leftMoveValue = right ? 0.1 : 0.5;
 		
-		driveMotors(rightMoveValue, leftMoveValue);
+		driveMotorsWithLeftAndRightValue(rightMoveValue, leftMoveValue);
 		Timer.delay(1.5);
-		driveMotors(0, 0);
-	}
-	
-	/**
-	 * Drive a set number of inches as measured by the encoders
-	 * @param inches the distance in inches to be driven
-	 */
-	private void driveForDistanceInInches(double inches)
-	{
-		// resets the count of each encoder
-		for (Encoder e : encoders)
-		{
-			e.reset();
-		}
+		driveMotorsWithLeftAndRightValue(0, 0);*/
 		
-		// get initial distance of each encoder (should be 0)
-		double leftDistance = Math.abs(leftEncoder.getDistance());
-		double rightDistance = Math.abs(rightEncoder.getDistance());
+		double moveValue = 0.4;
+		double rotateValue = right ? 0.5 : -0.5;
 		
-		// while the distances are under the given number of inches, drive the motors forward and update the distance values
-		while (leftDistance < inches && rightDistance < inches)
-		{
-			driveMotors(0.75, 0.75);
-			
-			leftDistance = Math.abs(leftEncoder.getDistance());
-			rightDistance = Math.abs(rightEncoder.getDistance());
-			
-			Timer.delay(0.1);
-		}
-		
-		driveMotors(0, 0);
-	}
-	
-	/**
-	 * Turn 90 degrees in either direction, based on direction passed in
-	 * @param direction true for right, false for left
-	 */
-	private void turnWithEncoders(boolean right)
-	{
-		for (Encoder e : encoders)
-		{
-			e.reset();
-		}
-		
-		double leftDistance = Math.abs(leftEncoder.getDistance());
-		double rightDistance = Math.abs(rightEncoder.getDistance());
-		
-		while (leftDistance < 18 && rightDistance < 18) // drive each side for 1.5 feet in opposite directions, needs testing
-		{
-			double rightMoveValue = right ? 0.5 : -0.5;
-			double leftMoveValue = -rightMoveValue;
-			
-			driveMotors(rightMoveValue, leftMoveValue);
-			
-			leftDistance = Math.abs(leftEncoder.getDistance());
-			rightDistance = Math.abs(leftEncoder.getDistance());
-			
-			Timer.delay(0.1);
-		}
-		
-		driveMotors(0, 0);
+		driveMotorsWithMoveAndRotateValue(moveValue, rotateValue);
+		Timer.delay(3);
+		driveMotorsWithMoveAndRotateValue(0, 0);
 	}
 	
 	/**
@@ -329,14 +276,24 @@ public class Autonomous
 	}
 	
 	/**
+	 * Sets a move and rotate value for the motors
+	 * @param moveValue
+	 * @param rotateValue
+	 */
+	private void driveMotorsWithMoveAndRotateValue(double moveValue, double rotateValue)
+	{
+		robotDrive.arcadeDrive(moveValue, rotateValue, true);
+	}
+	
+	/**
 	 * Set values for the left and right motors.
 	 * @param leftMotorsValue the assumed speed of the left motors.
 	 * @param rightMotorsValue the assumed speed of the right motors.
 	 */
-	private void driveMotors(double leftMotorsValue, double rightMotorsValue)
+	private void driveMotorsWithLeftAndRightValue(double leftMotorsValue, double rightMotorsValue)
 	{	
 		// make sure drive values are between -1 and 1 inclusive
-		/*double leftValue = leftMotorsValue;//leftMotorsValue > 0 ? Math.min(leftMotorsValue, 1) : Math.max(leftMotorsValue, -1);
+		/*&double leftValue = leftMotorsValue;//leftMotorsValue > 0 ? Math.min(leftMotorsValue, 1) : Math.max(leftMotorsValue, -1);
 		double rightValue = rightMotorsValue;//rightMotorsValue > 0 ? Math.min(rightMotorsValue, 1) : Math.max(rightMotorsValue, -1);
 		
 		// set each motor
@@ -351,5 +308,65 @@ public class Autonomous
 		}*/
 		
 		robotDrive.tankDrive(-leftMotorsValue, -rightMotorsValue, true);
+	}
+	
+	/**
+	 * Drive a set number of inches as measured by the encoders
+	 * @param inches the distance in inches to be driven
+	 */
+	private void driveForDistanceInInches(double inches)
+	{
+		// resets the count of each encoder
+		for (Encoder e : encoders)
+		{
+			e.reset();
+		}
+		
+		// get initial distance of each encoder (should be 0)
+		double leftDistance = Math.abs(leftEncoder.getDistance());
+		double rightDistance = Math.abs(rightEncoder.getDistance());
+		
+		// while the distances are under the given number of inches, drive the motors forward and update the distance values
+		while (leftDistance < inches && rightDistance < inches)
+		{
+			driveMotorsWithLeftAndRightValue(0.75, 0.75);
+			
+			leftDistance = Math.abs(leftEncoder.getDistance());
+			rightDistance = Math.abs(rightEncoder.getDistance());
+			
+			Timer.delay(0.1);
+		}
+		
+		driveMotorsWithLeftAndRightValue(0, 0);
+	}
+	
+	/**
+	 * Turn 90 degrees in either direction, based on direction passed in
+	 * @param direction true for right, false for left
+	 */
+	private void turnWithEncoders(boolean right)
+	{
+		for (Encoder e : encoders)
+		{
+			e.reset();
+		}
+		
+		double leftDistance = Math.abs(leftEncoder.getDistance());
+		double rightDistance = Math.abs(rightEncoder.getDistance());
+		
+		while (leftDistance < 18 && rightDistance < 18) // drive each side for 1.5 feet in opposite directions, needs testing
+		{
+			double rightMoveValue = right ? 0.5 : -0.5;
+			double leftMoveValue = -rightMoveValue;
+			
+			driveMotorsWithLeftAndRightValue(rightMoveValue, leftMoveValue);
+			
+			leftDistance = Math.abs(leftEncoder.getDistance());
+			rightDistance = Math.abs(leftEncoder.getDistance());
+			
+			Timer.delay(0.1);
+		}
+		
+		driveMotorsWithLeftAndRightValue(0, 0);
 	}
 }

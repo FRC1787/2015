@@ -61,7 +61,7 @@ public class DriveController
     /**
      * The new ramp mode.
      */
-    public static final int NEW_RAMP_MODE = 1;
+    public static final int FAST_RAMP_MODE = 1;
     
     /**
      * The faster ramp mode.
@@ -76,12 +76,12 @@ public class DriveController
     /**
      * The current ramp mode.
      */
-    public static final int CURRENT_RAMP_MODE = NEW_RAMP_MODE;
+    public static final int CURRENT_RAMP_MODE = FAST_RAMP_MODE;
 	
 	/**
 	 * The speed at which to multiply input; must be between 0 and 1.
 	 */
-	public static final double DRIVE_SPEED = 1.0;
+	public static final double[] DRIVE_SPEED = {0.6, 0.75, 0.85, 0.99};
 	
 	/**
 	 * The speed that the robot rotates at.
@@ -94,14 +94,9 @@ public class DriveController
 	public static final double[] MOTOR_INCREMENT = {0.003333, 0.01, 0.05, 0.06};
 	
 	/**
-	 * The maximum motor speed
-	 */
-	public static final double MOTOR_MAX = DRIVE_SPEED;
-	
-	/**
 	 * The minimum speed at which the motor moves
 	 */
-	public static final double[] MOTOR_MIN = {0.35, 0.45, 0.6, 0.65};
+	public static final double[] MOTOR_MIN = {0.3, 0.35, 0.6, 0.65};
 	
 	/**
 	 * The left motors.
@@ -243,7 +238,7 @@ public class DriveController
     	 * cause motors to drive forwards. So for the time being, forwards is backwards, and backwards is forwards,
     	 * and moveValue is set to xboxController.getY().
     	 */
-    	moveValue = xboxController.getY() * DRIVE_SPEED;
+    	moveValue = xboxController.getY() * DRIVE_SPEED[CURRENT_RAMP_MODE];
     	rotateValue = xboxController.getX() * ROTATE_SPEED;
     	
     	//Utils.printPeriodic("Drive Before", "moveValue: " + moveValue + " rotateValue: " + rotateValue);
@@ -273,6 +268,7 @@ public class DriveController
     		// Grab the current values
     		final double motorIncrement = MOTOR_INCREMENT[CURRENT_RAMP_MODE];
     		final double motorMin = MOTOR_MIN[CURRENT_RAMP_MODE];
+    		final double motorMax = DRIVE_SPEED[CURRENT_RAMP_MODE];
     		
 	    	if (driveState == DriveState.FORWARD)
 	    	{
@@ -280,7 +276,7 @@ public class DriveController
 	    		{
 	    			moveValue = MOTOR_MIN;
 	    		}*/
-	    		if (oldMoveValue < moveValue && oldMoveValue + motorIncrement < MOTOR_MAX)
+	    		if (oldMoveValue < moveValue && oldMoveValue + motorIncrement < motorMax)
 	    		{	
 	    			moveValue = oldMoveValue + motorIncrement;
 	    			
@@ -301,7 +297,7 @@ public class DriveController
 	    		{
 	    			moveValue = -MOTOR_MIN;
 	    		}*/
-	    		if (oldMoveValue > moveValue && oldMoveValue - motorIncrement > -MOTOR_MAX)
+	    		if (oldMoveValue > moveValue && oldMoveValue - motorIncrement > -motorMax)
 	    		{
 	    			moveValue = oldMoveValue - motorIncrement;
 	    			
