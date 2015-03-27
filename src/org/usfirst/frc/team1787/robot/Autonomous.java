@@ -29,6 +29,12 @@ public class Autonomous
 	private final CANTalon[] rightMotors;
 	
 	/**
+     * The instance of the drive class that actually
+     * sends the movement values to the motors.
+     */
+    private final RobotDrive robotDrive;
+	
+	/**
 	 * The array of pickup motors.
 	 */
 	private final CANTalon[] pickupMotors;
@@ -129,6 +135,8 @@ public class Autonomous
 		this.topLimit = topLimit;
 		
 		encoders = new Encoder[] {this.leftEncoder, this.rightEncoder};
+		
+		robotDrive = new RobotDrive(this.leftMotors[0], this.leftMotors[1], this.rightMotors[0], this.rightMotors[1]);
 	}
 	
 	/**
@@ -174,12 +182,12 @@ public class Autonomous
 	private void autonomousOptionOneWithTimer()
 	{
 		pickupArmsRaise();
-		driveForTimeInSeconds(1.5);
-		pickupArmsLower();
-		pickupArmsRaise();
-		turnWithTimerDelay(false);
-		driveForTimeInSeconds(3);
-		pickupArmsLower();
+		//driveForTimeInSeconds(2);
+		//pickupArmsLower();
+		//pickupArmsRaise();
+		//turnWithTimerDelay(false);
+		//driveForTimeInSeconds(6);
+		//pickupArmsLower();
 	}
 	
 	/**
@@ -208,8 +216,8 @@ public class Autonomous
 	 */
 	private void turnWithTimerDelay(boolean right)
 	{
-		double rightMoveValue = right ? 0.5 : -0.5;
-		double leftMoveValue = -rightMoveValue;
+		double rightMoveValue = right ? 0.5 : 0.1;
+		double leftMoveValue = right ? 0.1 : 0.5;
 		
 		driveMotors(rightMoveValue, leftMoveValue);
 		Timer.delay(1.5);
@@ -328,7 +336,7 @@ public class Autonomous
 	private void driveMotors(double leftMotorsValue, double rightMotorsValue)
 	{	
 		// make sure drive values are between -1 and 1 inclusive
-		double leftValue = leftMotorsValue;//leftMotorsValue > 0 ? Math.min(leftMotorsValue, 1) : Math.max(leftMotorsValue, -1);
+		/*double leftValue = leftMotorsValue;//leftMotorsValue > 0 ? Math.min(leftMotorsValue, 1) : Math.max(leftMotorsValue, -1);
 		double rightValue = rightMotorsValue;//rightMotorsValue > 0 ? Math.min(rightMotorsValue, 1) : Math.max(rightMotorsValue, -1);
 		
 		// set each motor
@@ -340,6 +348,8 @@ public class Autonomous
 		for (CANTalon t : rightMotors)
 		{
 			t.set(rightValue);
-		}
+		}*/
+		
+		robotDrive.tankDrive(-leftMotorsValue, -rightMotorsValue, true);
 	}
 }

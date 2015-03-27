@@ -246,13 +246,18 @@ public class DriveController
     	{
 	    	if (driveState == DriveState.FORWARD)
 	    	{
-	    		if (moveValue < MOTOR_MIN)
+	    		/*if (moveValue < MOTOR_MIN)
 	    		{
 	    			moveValue = MOTOR_MIN;
-	    		}
-	    		else if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
+	    		}*/
+	    		if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
 	    		{	
 	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
+	    			
+	    			if (moveValue < MOTOR_MIN)
+		    		{
+		    			moveValue = MOTOR_MIN;
+		    		}
 	    		}
 	    		// Uncomment the following to allow gradual deceleration
 	    		else if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > 0)
@@ -262,13 +267,18 @@ public class DriveController
 	    	}
 	    	else if (driveState == DriveState.BACKWARD)
 	    	{	
-	    		if (moveValue > -MOTOR_MIN)
+	    		/*if (moveValue > -MOTOR_MIN)
 	    		{
 	    			moveValue = -MOTOR_MIN;
-	    		}
-	    		else if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > -MOTOR_MAX)
+	    		}*/
+	    		if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > -MOTOR_MAX)
 	    		{
 	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
+	    			
+	    			if (moveValue > -MOTOR_MIN)
+		    		{
+		    			moveValue = -MOTOR_MIN;
+		    		}
 	    		}
 	    		// Uncomment the following to allow gradual deceleration
 	    		else if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < 0)
