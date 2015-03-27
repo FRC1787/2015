@@ -169,15 +169,6 @@ public class Autonomous
 	}
 	
 	/**
-	 * Push tote and can forward into auto zone without picking up either object
-	 */
-	@SuppressWarnings("unused")
-	private void autonomousOptionTwo()
-	{
-		driveForDistanceInInches(120.0); // 10 feet, change when real distance is determined
-	}
-	
-	/**
 	 * Same as autonomousOptionOne() but uses timer delays instead of encoders
 	 */
 	private void autonomousOptionOneWithTimer()
@@ -189,6 +180,40 @@ public class Autonomous
 		turnWithTimerDelay(false);
 		driveForTimeInSeconds(3);
 		pickupArmsLower();
+	}
+	
+	/**
+	 * Push tote and can forward into auto zone without picking up either object
+	 */
+	@SuppressWarnings("unused")
+	private void autonomousOptionTwo()
+	{
+		driveForDistanceInInches(120.0); // 10 feet, change when real distance is determined
+	}
+	
+	/**
+	 * Drive for a specified amount of time.
+	 * @param seconds the amount of time before stopping
+	 */
+	private void driveForTimeInSeconds(double seconds)
+	{
+		driveMotors(0.7, 0.7);
+		Timer.delay(seconds);
+		driveMotors(0, 0);
+	}
+	
+	/**
+	 * Turns the robot left or right.
+	 * @param right whether or not the robot should turn right
+	 */
+	private void turnWithTimerDelay(boolean right)
+	{
+		double rightMoveValue = right ? 0.5 : -0.5;
+		double leftMoveValue = -rightMoveValue;
+		
+		driveMotors(rightMoveValue, leftMoveValue);
+		Timer.delay(1.5);
+		driveMotors(0, 0);
 	}
 	
 	/**
@@ -221,13 +246,6 @@ public class Autonomous
 		driveMotors(0, 0);
 	}
 	
-	private void driveForTimeInSeconds(double seconds)
-	{
-		driveMotors(0.7, 0.7);
-		Timer.delay(seconds);
-		driveMotors(0, 0);
-	}
-	
 	/**
 	 * Turn 90 degrees in either direction, based on direction passed in
 	 * @param direction true for right, false for left
@@ -255,16 +273,6 @@ public class Autonomous
 			Timer.delay(0.1);
 		}
 		
-		driveMotors(0, 0);
-	}
-	
-	private void turnWithTimerDelay(boolean right)
-	{
-		double rightMoveValue = right ? 0.5 : -0.5;
-		double leftMoveValue = -rightMoveValue;
-		
-		driveMotors(rightMoveValue, leftMoveValue);
-		Timer.delay(1.5);
 		driveMotors(0, 0);
 	}
 	

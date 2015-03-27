@@ -28,6 +28,9 @@ public class PickupController
 	 */
 	private boolean topLimitReached = false, bottomLimitReached = false, automaticActive = false;
 	
+	/**
+	 * emergency stop boolean variable
+	 */
 	private boolean emergencyStop = false;
 	
 	/**
@@ -125,6 +128,9 @@ public class PickupController
 		}
 	}
 	
+	/**
+	 * Check to see if emergency stop has been engaged or disengaged
+	 */
 	public void checkEmergencyStop()
 	{
 		if (xboxController.getRawButton(8))
@@ -196,6 +202,7 @@ public class PickupController
 	/**
 	 * Prints state of each limit switch
 	 */
+	@SuppressWarnings("unused")
 	private void pickupTest()
 	{
 		if (xboxController.getRawButton(4))
@@ -224,64 +231,5 @@ public class PickupController
 			pickupMotors[0].set(0);
 		}
 	}
-	
-	/**
-	 * Should raise the pickup mechanism.
-	 */
-	/*public void raisePickupMechanism()
-	{
-		// Method needs more work, so far it raises when the button is pressed, 
-		// accelerates, stops when top limit is reached
-		
-		if (!pickupRaising)
-		{
-			pickupRaising = true;
-			pickupLowering = false;
-			
-			double x = 0;
-    	
-    		while (!topLimit.get())
-    		{
-    			pickupSpeed = (Math.pow(1.4, x) - 1) <= 1 ? (Math.pow(1.4, x) - 1) : 1;
-    			x += 0.1;
-    		
-    			pickupMotor.set(pickupSpeed);
-    			Timer.delay(0.1);
-    		}
-    		
-    		if (topLimit.get())
-    		{
-    			pickupMotor.set(0);
-    		}
-		}
-	}*/
-	
-	/**
-	 * Should the lower the pickup mechanism.
-	 */
-	/*public void lowerPickupMechanism()
-	{
-		if (!pickupLowering)
-		{
-			pickupLowering = true;
-			pickupRaising = false;
-			
-			double x = 0;
-			
-			while (!bottomLimit.get())
-			{
-				pickupSpeed = -(Math.pow(1.4, x) - 1) >= -1 ? -(Math.pow(1.4, x) - 1) : -1;
-				x += 0.1;
-				
-				pickupMotor.set(pickupSpeed);
-				Timer.delay(0.1);
-			}
-			
-			if (topLimit.get())
-			{
-				pickupMotor.set(0);
-			}
-		}
-	}*/
 }
 
