@@ -52,6 +52,31 @@ public class DriveController
      * The current drive state that the robot is in.
      */
     private DriveState driveState;
+    
+    /**
+     * The default ramp mode.
+     */
+    public static final int DEFAULT_RAMP_MODE = 0;
+    
+    /**
+     * The new ramp mode.
+     */
+    public static final int NEW_RAMP_MODE = 1;
+    
+    /**
+     * The faster ramp mode.
+     */
+    public static final int FASTER_RAMP_MODE = 2;
+    
+    /**
+     * The fastest ramp mode.
+     */
+    public static final int FASTEST_RAMP_MODE = 3;
+    
+    /**
+     * The current ramp mode.
+     */
+    public static final int CURRENT_RAMP_MODE = NEW_RAMP_MODE;
 	
 	/**
 	 * The speed at which to multiply input; must be between 0 and 1.
@@ -66,7 +91,7 @@ public class DriveController
 	/**
 	 * The increment size for the motor speed. 
 	 */
-	public static final double MOTOR_INCREMENT = 0.003333;
+	public static final double[] MOTOR_INCREMENT = {0.003333, 0.01, 0.05, 0.06};
 	
 	/**
 	 * The maximum motor speed
@@ -76,7 +101,7 @@ public class DriveController
 	/**
 	 * The minimum speed at which the motor moves
 	 */
-	public static final double MOTOR_MIN = 0.35;
+	public static final double[] MOTOR_MIN = {0.35, 0.45, 0.6, 0.65};
 	
 	/**
 	 * The left motors.
@@ -244,25 +269,30 @@ public class DriveController
     	 */
     	if (driveMode == DriveMode.DRIVE_MODE_INCREMENTAL)
     	{
+    		
+    		// Grab the current values
+    		final double motorIncrement = MOTOR_INCREMENT[CURRENT_RAMP_MODE];
+    		final double motorMin = MOTOR_MIN[CURRENT_RAMP_MODE];
+    		
 	    	if (driveState == DriveState.FORWARD)
 	    	{
 	    		/*if (moveValue < MOTOR_MIN)
 	    		{
 	    			moveValue = MOTOR_MIN;
 	    		}*/
-	    		if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < MOTOR_MAX)
+	    		if (oldMoveValue < moveValue && oldMoveValue + motorIncrement < MOTOR_MAX)
 	    		{	
-	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
+	    			moveValue = oldMoveValue + motorIncrement;
 	    			
-	    			if (moveValue < MOTOR_MIN)
+	    			if (moveValue < motorMin)
 		    		{
-		    			moveValue = MOTOR_MIN;
+		    			moveValue = motorMin;
 		    		}
 	    		}
 	    		// Uncomment the following to allow gradual deceleration
-	    		else if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > 0)
+	    		else if (oldMoveValue > moveValue && oldMoveValue - motorIncrement > 0)
 	    		{
-	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
+	    			moveValue = oldMoveValue - motorIncrement;
 	    		}
 	    	}
 	    	else if (driveState == DriveState.BACKWARD)
@@ -271,19 +301,19 @@ public class DriveController
 	    		{
 	    			moveValue = -MOTOR_MIN;
 	    		}*/
-	    		if (oldMoveValue > moveValue && oldMoveValue - MOTOR_INCREMENT > -MOTOR_MAX)
+	    		if (oldMoveValue > moveValue && oldMoveValue - motorIncrement > -MOTOR_MAX)
 	    		{
-	    			moveValue = oldMoveValue - MOTOR_INCREMENT;
+	    			moveValue = oldMoveValue - motorIncrement;
 	    			
-	    			if (moveValue > -MOTOR_MIN)
+	    			if (moveValue > -motorMin)
 		    		{
-		    			moveValue = -MOTOR_MIN;
+		    			moveValue = -motorMin;
 		    		}
 	    		}
 	    		// Uncomment the following to allow gradual deceleration
-	    		else if (oldMoveValue < moveValue && oldMoveValue + MOTOR_INCREMENT < 0)
+	    		else if (oldMoveValue < moveValue && oldMoveValue + motorIncrement < 0)
 	    		{
-	    			moveValue = oldMoveValue + MOTOR_INCREMENT;
+	    			moveValue = oldMoveValue + motorIncrement;
 	    		}
 	    	}
 	    	else if (driveState == DriveState.NOT_MOVING)
