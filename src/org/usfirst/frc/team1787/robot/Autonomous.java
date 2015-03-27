@@ -55,6 +55,16 @@ public class Autonomous
 	private boolean active = false;
 	
 	/**
+	 * The current speed.
+	 */
+	private double currentSpeed = 0;
+	
+	/**
+	 * The current rotation.
+	 */
+	private double currentRotation = 0;
+	
+	/**
 	 * Constructor for the Autonomous class, takes the port numbers instead of objects
 	 * @param pickupMotorPort port for the pickup motor
 	 * @param leftMotorPorts int array representing the ports of the left motors
@@ -123,7 +133,8 @@ public class Autonomous
 			Encoder rightEncoder,
 			DigitalInput bottomLimit,
 			DigitalInput topLimit,
-			Joystick xboxController
+			Joystick xboxController, 
+			RobotDrive robotDrive
 			)
 	{
 		this.pickupMotors = pickupMotors;
@@ -136,7 +147,7 @@ public class Autonomous
 		
 		encoders = new Encoder[] {this.leftEncoder, this.rightEncoder};
 		
-		robotDrive = new RobotDrive(this.leftMotors[0], this.leftMotors[1], this.rightMotors[0], this.rightMotors[1]);
+		this.robotDrive = robotDrive;
 	}
 	
 	/**
@@ -159,6 +170,9 @@ public class Autonomous
 			autonomousOptionOneWithTimer();
 			active = true;
 		}
+		
+		// Drive
+		robotDrive.arcadeDrive(currentSpeed, currentRotation, true);
 	}
 	
 	/**
@@ -181,13 +195,23 @@ public class Autonomous
 	 */
 	private void autonomousOptionOneWithTimer()
 	{
-		pickupArmsRaise();
-		driveForTimeInSeconds(2);
-		pickupArmsLower();
-		pickupArmsRaise();
-		turnWithTimerDelay(false);
-		driveForTimeInSeconds(6);
-		pickupArmsLower();
+		Runnable runnable = new Runnable() {
+			
+			public void run()
+			{
+				pickupArmsRaise();
+				driveForTimeInSeconds(2);
+				pickupArmsLower();
+				Timer.delay(1);
+				pickupArmsRaise();
+				turnWithTimerDelay(false);
+				driveForTimeInSeconds(6);
+				pickupArmsLower();
+			}
+			
+		};
+		Thread thread = new Thread(runnable);
+		thread.start();
 	}
 	
 	/**
@@ -205,7 +229,7 @@ public class Autonomous
 	 */
 	private void driveForTimeInSeconds(double seconds)
 	{
-		driveMotorsWithMoveAndRotateValue(0.7, 0);
+		driveMotorsWithMoveAndRotateValue(0.65, 0);
 		Timer.delay(seconds);
 		driveMotorsWithMoveAndRotateValue(0, 0);
 	}
@@ -282,7 +306,12 @@ public class Autonomous
 	 */
 	private void driveMotorsWithMoveAndRotateValue(double moveValue, double rotateValue)
 	{
-		robotDrive.arcadeDrive(moveValue, rotateValue, true);
+		//Utils.printPeriodic("Drive", "MoveValue: " + moveValue + " Rotate: " + rotateValue);
+		//robotDrive.arcadeDrive(-moveValue, rotateValue, true);
+		
+		// Set the variables
+		currentSpeed = -moveValue;
+		currentRotation = rotateValue;
 	}
 	
 	/**
@@ -292,21 +321,6 @@ public class Autonomous
 	 */
 	private void driveMotorsWithLeftAndRightValue(double leftMotorsValue, double rightMotorsValue)
 	{	
-		// make sure drive values are between -1 and 1 inclusive
-		/*&double leftValue = leftMotorsValue;//leftMotorsValue > 0 ? Math.min(leftMotorsValue, 1) : Math.max(leftMotorsValue, -1);
-		double rightValue = rightMotorsValue;//rightMotorsValue > 0 ? Math.min(rightMotorsValue, 1) : Math.max(rightMotorsValue, -1);
-		
-		// set each motor
-		for (CANTalon t : leftMotors)
-		{
-			t.set(leftValue);
-		}
-		
-		for (CANTalon t : rightMotors)
-		{
-			t.set(rightValue);
-		}*/
-		
 		robotDrive.tankDrive(-leftMotorsValue, -rightMotorsValue, true);
 	}
 	

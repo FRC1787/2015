@@ -105,13 +105,17 @@ public class Robot extends IterativeRobot
 		// Create the controllers
 		pickupController = new PickupController(pickupMotors, bottomLimit, topLimit, xboxController);
 		
+		// Create the robot drive
+		RobotDrive robotDrive = new RobotDrive(this.leftMotors[0], this.leftMotors[1], this.rightMotors[0], this.rightMotors[1]);
+		
 		driveController = new DriveController(
-				DriveMode.DRIVE_MODE_INCREMENTAL,
+				DriveMode.DRIVE_MODE_NORMAL,
 				leftMotors,
 				rightMotors,
 				leftEncoder,
 				rightEncoder,
-				xboxController
+				xboxController, 
+				robotDrive
 				);
 		
 		autonomous = new Autonomous(
@@ -122,7 +126,8 @@ public class Robot extends IterativeRobot
 				rightEncoder,
 				bottomLimit,
 				topLimit,
-				xboxController
+				xboxController, 
+				robotDrive
 				);
     }
 	

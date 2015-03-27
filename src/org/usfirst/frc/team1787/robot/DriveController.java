@@ -81,7 +81,7 @@ public class DriveController
 	/**
 	 * The speed at which to multiply input; must be between 0 and 1.
 	 */
-	public static final double[] DRIVE_SPEED = {0.6, 0.75, 0.85, 0.99};
+	public static final double[] DRIVE_SPEED = {0.6, 0.65, 0.85, 0.99};
 	
 	/**
 	 * The speed that the robot rotates at.
@@ -145,7 +145,7 @@ public class DriveController
      * @param rightEncoderPorts int array representing the right encoder ports
      * @param xboxController the shared instance of the xbox controller
      */
-    public DriveController(
+    /*public DriveController(
     		DriveMode driveMode, 
     		int[] leftMotorPorts, 
     		int[] rightMotorPorts, 
@@ -180,7 +180,7 @@ public class DriveController
         // Set driveState and driveMode
         this.driveMode = driveMode;
         this.driveState = DriveState.NOT_MOVING;
-    }
+    }*/
     
     /**
      * Takes references to objects, not port numbers
@@ -197,7 +197,8 @@ public class DriveController
     		CANTalon[] rightMotors,
     		Encoder leftEncoder,
     		Encoder rightEncoder,
-    		Joystick xboxController
+    		Joystick xboxController, 
+    		RobotDrive robotDrive
     		)
     {
     	this.driveMode = driveMode;
@@ -207,9 +208,10 @@ public class DriveController
     	this.rightEncoder = rightEncoder;
     	this.xboxController = xboxController;
     	
-    	robotDrive = new RobotDrive(this.leftMotors[0], this.leftMotors[1], this.rightMotors[0], this.rightMotors[1]);
     	
     	this.driveState = DriveState.NOT_MOVING;
+    	
+    	this.robotDrive = robotDrive;
     }
     
     
@@ -330,7 +332,7 @@ public class DriveController
     	 */
     	else if (driveMode == DriveMode.DRIVE_MODE_NORMAL)
     	{
-        	double adjustedMoveValue = 0.7 * moveValue;
+        	double adjustedMoveValue = 0.65 * moveValue;
     		
     		robotDrive.arcadeDrive(adjustedMoveValue, rotateValue, true);
             Timer.delay(0.01);
