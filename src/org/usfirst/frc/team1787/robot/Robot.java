@@ -109,7 +109,7 @@ public class Robot extends IterativeRobot
 		RobotDrive robotDrive = new RobotDrive(this.leftMotors[0], this.leftMotors[1], this.rightMotors[0], this.rightMotors[1]);
 		
 		driveController = new DriveController(
-				DriveMode.DRIVE_MODE_NORMAL,
+				DriveMode.DRIVE_MODE_INCREMENTAL,
 				leftMotors,
 				rightMotors,
 				leftEncoder,

@@ -167,7 +167,7 @@ public class Autonomous
 	{
 		if (!active)
 		{
-			autonomousOptionOneWithTimer();
+			autonomousOptionTwoWithTimer();
 			active = true;
 		}
 		
@@ -224,13 +224,29 @@ public class Autonomous
 		driveForDistanceInInches(120.0); // 10 feet, change when real distance is determined
 	}
 	
+	private void autonomousOptionTwoWithTimer()
+	{
+		Runnable runnable = new Runnable() {
+			
+			public void run()
+			{
+				pickupArmsRaise();
+				driveForTimeInSeconds(6.0);
+				pickupArmsLower();
+			}
+			
+		};
+		Thread thread = new Thread(runnable);
+		thread.start();
+	}
+	
 	/**
 	 * Drive for a specified amount of time.
 	 * @param seconds the amount of time before stopping
 	 */
 	private void driveForTimeInSeconds(double seconds)
 	{
-		driveMotorsWithMoveAndRotateValue(0.7, 0);
+		driveMotorsWithMoveAndRotateValue(0.6, 0);
 		Timer.delay(seconds);
 		driveMotorsWithMoveAndRotateValue(0, 0);
 	}

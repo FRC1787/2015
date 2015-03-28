@@ -274,10 +274,6 @@ public class DriveController
     		
 	    	if (driveState == DriveState.FORWARD)
 	    	{
-	    		/*if (moveValue < MOTOR_MIN)
-	    		{
-	    			moveValue = MOTOR_MIN;
-	    		}*/
 	    		if (oldMoveValue < moveValue && oldMoveValue + motorIncrement < motorMax)
 	    		{	
 	    			moveValue = oldMoveValue + motorIncrement;
@@ -294,11 +290,7 @@ public class DriveController
 	    		}
 	    	}
 	    	else if (driveState == DriveState.BACKWARD)
-	    	{	
-	    		/*if (moveValue > -MOTOR_MIN)
-	    		{
-	    			moveValue = -MOTOR_MIN;
-	    		}*/
+	    	{
 	    		if (oldMoveValue > moveValue && oldMoveValue - motorIncrement > -motorMax)
 	    		{
 	    			moveValue = oldMoveValue - motorIncrement;
@@ -332,7 +324,7 @@ public class DriveController
     	 */
     	else if (driveMode == DriveMode.DRIVE_MODE_NORMAL)
     	{
-        	double adjustedMoveValue = 0.65 * moveValue;
+        	double adjustedMoveValue = 0.7 * moveValue;
     		
     		robotDrive.arcadeDrive(adjustedMoveValue, rotateValue, true);
             Timer.delay(0.01);
