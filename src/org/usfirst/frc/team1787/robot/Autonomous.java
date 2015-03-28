@@ -184,6 +184,7 @@ public class Autonomous
 		pickupArmsRaise();
 		driveForDistanceInInches(18.0); // 1.5 feet
 		pickupArmsLower();
+		Timer.delay(0.2);
 		pickupArmsRaise();
 		turnWithEncoders(false); // turns left
 		driveForDistanceInInches(120.0); // 10 feet, change when real distance is determined
@@ -202,11 +203,11 @@ public class Autonomous
 				pickupArmsRaise();
 				driveForTimeInSeconds(2);
 				pickupArmsLower();
-				Timer.delay(1);
-				pickupArmsRaise();
+				//Timer.delay(0.2);
+				//pickupArmsRaise();
 				turnWithTimerDelay(false);
 				driveForTimeInSeconds(6);
-				pickupArmsLower();
+				//pickupArmsLower();
 			}
 			
 		};
@@ -229,7 +230,7 @@ public class Autonomous
 	 */
 	private void driveForTimeInSeconds(double seconds)
 	{
-		driveMotorsWithMoveAndRotateValue(0.65, 0);
+		driveMotorsWithMoveAndRotateValue(0.7, 0);
 		Timer.delay(seconds);
 		driveMotorsWithMoveAndRotateValue(0, 0);
 	}
@@ -264,7 +265,7 @@ public class Autonomous
 		{
 			setPickupMotors(1.0);
 			
-			Timer.delay(0.1);
+			Timer.delay(0.05);
 			
 			if (!topLimit.get())
 			{
@@ -286,7 +287,7 @@ public class Autonomous
 		{	
 			setPickupMotors(-1.0);
 			
-			Timer.delay(0.1);
+			Timer.delay(0.05);
 			
 			if (!bottomLimit.get())
 			{
